@@ -1,0 +1,9 @@
+query auth($token: String!) {
+  auth(token: $token) {
+    msg
+    user {
+      id
+      name
+    }
+  }
+}

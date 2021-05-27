@@ -1,12 +1,15 @@
 import { useRouter } from "next/router";
-import { FormEvent, useContext, useEffect } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Ctx } from "../context";
+import { POST } from "../graphql/mutation/post";
 import { AUTH } from "../graphql/queries/auth";
 
 export default function Post() {
-  const { auth, userInfo, client, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, userInfo, sdk, setAuth, setUserInfo } = useContext(Ctx);
   const router = useRouter();
-
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [error, setError] = useState("");
   let token: string;
 
   useEffect(() => {
@@ -16,11 +19,11 @@ export default function Post() {
       }
       if (token) {
         (async () => {
-          const res = await client.request(AUTH, { token: token });
-          console.log(res);
-          if (res.auth.msg === "great" && res.auth.user) {
+          const { auth } = await sdk.auth({ token: token });
+
+          if (auth.msg === "great" && auth.user) {
             setAuth(true);
-            setUserInfo(res.auth.user);
+            setUserInfo(auth.user);
           } else {
             alert("login please");
             router.push("/login");
@@ -35,12 +38,35 @@ export default function Post() {
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (title.trim() == "" || body.trim() == "") {
+      setError("*please fill the form ");
+      return;
+    }
+    const res = await client.request(POST, {
+      title: title,
+      body: body,
+      userId: userInfo.id,
+    });
+    if (res.post.msg === "great") {
+      router.push("/");
+    } else {
+      setError("*" + res.post.msg);
+    }
   };
 
   return (
     <form className=" w-24 m-5" onSubmit={formSubmit}>
-      <input placeholder="title" className="pl-2 rounded-sm" />
-      <textarea className=" h-48 w-64 mt-5 pl-2" placeholder="body"></textarea>
+      <input
+        placeholder="title"
+        className="pl-2 rounded-sm"
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        className=" h-48 w-64 mt-5 pl-2"
+        placeholder="body"
+        onChange={(e) => setBody(e.target.value)}
+      ></textarea>
+      <h1 className="text-red-700 text-xs mt-3 -mb-2 w-64">{error}</h1>
       <button className="mt-5 bg-gray-300 text-gray-800 px-2 py-1 hover:bg-black hover:text-white rounded-sm hover:underline">
         submit
       </button>

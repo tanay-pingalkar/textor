@@ -1,0 +1,9 @@
+query feed {
+  feed {
+    title
+    body
+    user {
+      name
+    }
+  }
+}

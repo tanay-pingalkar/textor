@@ -16,6 +16,12 @@ export class posts {
       };
     }
 
+    if (title.length >= 20) {
+      return {
+        msg: "title should be less than 20",
+      };
+    }
+
     if (body.length > 300) {
       return {
         msg: "your body extends the limit of 300 words",

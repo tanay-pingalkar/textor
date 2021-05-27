@@ -2,10 +2,9 @@ import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import Post from "../components/post";
 import { Ctx } from "../context";
-import { AUTH } from "../graphql/queries/auth";
 
 export default function Home() {
-  const { auth, userInfo, client, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, userInfo, sdk, setAuth, setUserInfo } = useContext(Ctx);
   const router = useRouter();
 
   let token: string;
@@ -17,11 +16,11 @@ export default function Home() {
       }
       if (token) {
         (async () => {
-          const res = await client.request(AUTH, { token: token });
-          console.log(res);
-          if (res.auth.msg === "great" && res.auth.user) {
+          const { auth } = await sdk.auth({ token: token });
+
+          if (auth.msg === "great" && auth.user) {
             setAuth(true);
-            setUserInfo(res.auth.user);
+            setUserInfo(auth.user);
           } else {
             alert("login please");
             router.push("/login");

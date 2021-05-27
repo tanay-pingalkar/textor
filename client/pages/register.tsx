@@ -1,14 +1,13 @@
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
 import { Ctx } from "../context";
-import { REGISTER } from "../graphql/mutation/register";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { client } = useContext(Ctx);
+  const { sdk } = useContext(Ctx);
   const router = useRouter();
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -18,16 +17,16 @@ export default function Register() {
       return;
     }
     try {
-      const res = await client.request(REGISTER, {
+      const { register } = await sdk.register({
         name: name,
         email: email,
         password,
       });
-      if (res.register.msg === "great" && res.register.token) {
-        localStorage.setItem("token", res.register.token);
+      if (register.msg === "great" && register.token) {
+        localStorage.setItem("token", register.token);
         router.push("/");
       } else {
-        setError("*" + res.register.msg);
+        setError("*" + register.msg);
       }
     } catch (error) {
       console.log(error);

@@ -1,7 +1,6 @@
 import { useMediaQuery } from "react-responsive";
 import { useContext } from "react";
 import { Ctx } from "../context";
-import { AUTH } from "../graphql/queries/auth";
 import MainNav from "./desktopNav";
 import { useRouter } from "next/router";
 import MobileNav from "./mobileNav";
