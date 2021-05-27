@@ -1,19 +1,24 @@
 import Votes from "./votes";
 
-const Post = () => {
+interface props {
+  user: string;
+  title: string;
+  body: string;
+  key: number;
+}
+
+const Post: React.FC<props> = ({ title, body, user, key }) => {
   return (
     <div className="px-5 pt-2 pb-1 border-b-2 border-white">
       <div className="flex justify-between">
-        <h1 className=" text-xl font-rubik font-medium">this is title</h1>
+        <h1 className=" text-xl font-rubik font-medium">{title}</h1>
         <h1 className="text-xs font-extralight hover:underline">
-          posted by lol
+          posted by {user}
         </h1>
       </div>
 
       <h1 className=" font-rubik font-thin break-normal text-sm sm:text-base">
-        an this is the content and here we go balh blah ans nancs this is cool
-        bro lol dbfsdn jfkf edkfs kdnksadmksdc sd adjajflwdsfsc wfs fowc osdkjsd
-        jfkds sfsd fsdoj sdofjks wcjhf uoefeijh
+        {body}
       </h1>
       <div className="flex justify-between">
         <Votes voted={true} votes={54}></Votes>

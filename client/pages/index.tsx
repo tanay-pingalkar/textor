@@ -1,10 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Post from "../components/post";
 import { Ctx } from "../context";
 import { AUTH } from "../graphql/queries/auth";
+import { FEED } from "../graphql/queries/feed";
 
 export default function Home() {
   const { client, setAuth, setUserInfo } = useContext(Ctx);
+  const [posts, setPosts] = useState([]);
   let token: string;
 
   useEffect(() => {
@@ -21,29 +23,16 @@ export default function Home() {
         }
       })();
     }
+    (async () => {
+      const res = await client.request(FEED);
+      setPosts(res.feed);
+    })();
   }, []);
   return (
     <div>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
-      <Post></Post>
+      {posts.map((post, key) => (
+        <Post title={post.title} body={post.body} user={post.user.name}></Post>
+      ))}
     </div>
   );
 }

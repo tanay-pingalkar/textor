@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 
-const HELLO = gql`
+export const HELLO = gql`
   query hello {
     hello
   }

@@ -1,5 +1,5 @@
 import { Posts } from "../entities/post";
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { postInput } from "../utils/inputs";
 import { postResponse } from "../utils/responses";
 import { Users } from "../entities/user";
@@ -49,5 +49,15 @@ export class posts {
         msg: "unusual error",
       };
     }
+  }
+
+  @Query(() => [Posts])
+  async feed() {
+    const posts = await Posts.find({
+      relations: ["user"],
+    });
+
+    console.log(posts);
+    return posts;
   }
 }
