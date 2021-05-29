@@ -14,10 +14,26 @@ export type Scalars = {
   Float: number;
 };
 
+export enum DownvoteAction {
+  Downvote = 'DOWNVOTE',
+  Undownvote = 'UNDOWNVOTE'
+}
+
+export type Downvotes = {
+  __typename?: 'Downvotes';
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  user: Users;
+  post: Posts;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register: RegisterResponse;
   post: PostResponse;
+  upvote: UpvoteResponse;
+  downvote: DownvoteResponse;
 };
 
 
@@ -30,6 +46,16 @@ export type MutationPostArgs = {
   postInfo: PostInput;
 };
 
+
+export type MutationUpvoteArgs = {
+  upvoteInfo: VoteInput;
+};
+
+
+export type MutationDownvoteArgs = {
+  upvoteInfo: VoteInput;
+};
+
 export type Posts = {
   __typename?: 'Posts';
   id: Scalars['ID'];
@@ -38,6 +64,9 @@ export type Posts = {
   title: Scalars['String'];
   body: Scalars['String'];
   user: Users;
+  upvotes: Array<Upvotes>;
+  downvotes: Array<Downvotes>;
+  totalVotes: Scalars['Float'];
 };
 
 export type Query = {
@@ -46,7 +75,7 @@ export type Query = {
   getAllUsers: Array<Users>;
   login: RegisterResponse;
   auth: AuthResponse;
-  feed: Array<Posts>;
+  feed: Array<FeedResponse>;
 };
 
 
@@ -59,6 +88,25 @@ export type QueryAuthArgs = {
   token: Scalars['String'];
 };
 
+
+export type QueryFeedArgs = {
+  feedInfo: FeedInput;
+};
+
+export enum UpvoteAction {
+  Upvote = 'UPVOTE',
+  Unupvote = 'UNUPVOTE'
+}
+
+export type Upvotes = {
+  __typename?: 'Upvotes';
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  user: Users;
+  post: Posts;
+};
+
 export type Users = {
   __typename?: 'Users';
   id: Scalars['ID'];
@@ -68,12 +116,32 @@ export type Users = {
   name: Scalars['String'];
   password: Scalars['String'];
   posts: Array<Posts>;
+  upvotes: Array<Upvotes>;
+  downvotes: Array<Downvotes>;
 };
 
 export type AuthResponse = {
   __typename?: 'authResponse';
   msg: Scalars['String'];
   user?: Maybe<Users>;
+};
+
+export type DownvoteResponse = {
+  __typename?: 'downvoteResponse';
+  msg: Scalars['String'];
+  action?: Maybe<DownvoteAction>;
+};
+
+export type FeedInput = {
+  userId?: Maybe<Scalars['String']>;
+  lastPostId?: Maybe<Scalars['String']>;
+};
+
+export type FeedResponse = {
+  __typename?: 'feedResponse';
+  upvoted: Scalars['Boolean'];
+  downvoted: Scalars['Boolean'];
+  post: Posts;
 };
 
 export type LoginInput = {
@@ -103,6 +171,17 @@ export type RegisterResponse = {
   __typename?: 'registerResponse';
   msg: Scalars['String'];
   token?: Maybe<Scalars['String']>;
+};
+
+export type UpvoteResponse = {
+  __typename?: 'upvoteResponse';
+  msg: Scalars['String'];
+  action?: Maybe<UpvoteAction>;
+};
+
+export type VoteInput = {
+  postId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type MsgAndTokenFragment = (
@@ -161,17 +240,24 @@ export type AuthQuery = (
   ) }
 );
 
-export type FeedQueryVariables = Exact<{ [key: string]: never; }>;
+export type FeedQueryVariables = Exact<{
+  userId?: Maybe<Scalars['String']>;
+  lastPostId?: Maybe<Scalars['String']>;
+}>;
 
 
 export type FeedQuery = (
   { __typename?: 'Query' }
   & { feed: Array<(
-    { __typename?: 'Posts' }
-    & Pick<Posts, 'title' | 'body'>
-    & { user: (
-      { __typename?: 'Users' }
-      & Pick<Users, 'name'>
+    { __typename?: 'feedResponse' }
+    & Pick<FeedResponse, 'upvoted' | 'downvoted'>
+    & { post: (
+      { __typename?: 'Posts' }
+      & Pick<Posts, 'title' | 'body' | 'totalVotes'>
+      & { user: (
+        { __typename?: 'Users' }
+        & Pick<Users, 'name'>
+      ) }
     ) }
   )> }
 );
@@ -234,12 +320,17 @@ export const AuthDocument = gql`
 }
     `;
 export const FeedDocument = gql`
-    query feed {
-  feed {
-    title
-    body
-    user {
-      name
+    query feed($userId: String, $lastPostId: String) {
+  feed(feedInfo: {userId: $userId, lastPostId: $lastPostId}) {
+    upvoted
+    downvoted
+    post {
+      title
+      body
+      totalVotes
+      user {
+        name
+      }
     }
   }
 }

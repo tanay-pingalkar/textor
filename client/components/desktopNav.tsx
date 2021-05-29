@@ -6,14 +6,11 @@ interface props {
 }
 const MainNav: React.FC<props> = ({ where }) => {
   return (
-    <div className="flex border-white border-b-2 justify-between px-5 ">
+    <div className="flex justify-between border-white border-b-2 px-5 py-1 ">
       <h1 className="font-rubik font-bold text-2xl tracking-widest mt-1">
         {where}
       </h1>
-      <input
-        className="h-6  border-gray-900 pl-1 mt-2"
-        placeholder="search"
-      ></input>
+      <input className="h-7 border-gray-900 mt-1" placeholder="search"></input>
       <NavToggle></NavToggle>
     </div>
   );

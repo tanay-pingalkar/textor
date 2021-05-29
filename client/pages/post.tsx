@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Ctx } from "../context";
-import { POST } from "../graphql/mutation/post";
-import { AUTH } from "../graphql/queries/auth";
 
 export default function Post() {
   const { auth, userInfo, sdk, setAuth, setUserInfo } = useContext(Ctx);
@@ -42,7 +40,7 @@ export default function Post() {
       setError("*please fill the form ");
       return;
     }
-    const res = await client.request(POST, {
+    const res = await sdk.post({
       title: title,
       body: body,
       userId: userInfo.id,

@@ -44,7 +44,7 @@ export class voteInput {
 
 @InputType()
 export class feedInput {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   userId: string;
 
   @Field(() => String, { nullable: true })

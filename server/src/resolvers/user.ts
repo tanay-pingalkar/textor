@@ -30,7 +30,13 @@ export class users {
     }
     if (registerInfo.name.length <= 3 || registerInfo.password.length <= 3) {
       return {
-        msg: "name or email or password must be greater than 3",
+        msg: "name or password must be greater than 3",
+      };
+    }
+
+    if (registerInfo.name.length >= 10) {
+      return {
+        msg: "name  must be less than 10",
       };
     }
 

@@ -1,9 +1,14 @@
-query feed {
-  feed {
-    title
-    body
-    user {
-      name
+query feed($userId: String, $lastPostId: String) {
+  feed(feedInfo: { userId: $userId, lastPostId: $lastPostId }) {
+    upvoted
+    downvoted
+    post {
+      title
+      body
+      totalVotes
+      user {
+        name
+      }
     }
   }
 }

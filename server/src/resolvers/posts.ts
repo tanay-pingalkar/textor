@@ -73,12 +73,9 @@ export class posts {
             "users",
             "users.id = Posts.userId"
           )
-          .where("Posts.id < :lastPostId", { lastPostId: Number(lastPostId) })
-          .where("Posts.id > :lastPostId", {
-            lastPostId: Number(lastPostId) - 8,
-          })
-          .orderBy("Posts.totalVotes", "DESC")
-          .addOrderBy("Posts.id", "DESC")
+          .where("Posts.id <= :lastPostId", { lastPostId: Number(lastPostId) })
+          .andWhere("Posts.id >= :limit", { limit: Number(lastPostId) - 5 })
+          .orderBy("Posts.id", "DESC")
           .getMany();
       } else {
         let max = await Posts.createQueryBuilder().select("MAX(ID)").execute();
@@ -90,46 +87,53 @@ export class posts {
             "users",
             "users.id = Posts.userId"
           )
-          .where("Posts.id < :lastPostId", { lastPostId: Number(max) })
-          .where("Posts.id > :lastPostId", {
-            lastPostId: Number(max) - 8,
+          .where("Posts.id <= :lastPostId", { lastPostId: Number(max) })
+          .andWhere("Posts.id >= :limit", {
+            limit: Number(max) - 5,
           })
-          .orderBy("Posts.totalVotes", "DESC")
-          .addOrderBy("Posts.id", "DESC")
+          .orderBy("Posts.id", "DESC")
           .getMany();
       }
 
       for (const post of posts) {
-        const isUpvoted = await Upvotes.createQueryBuilder()
-          .where("Upvotes.userId = :userId", { userId: userId })
-          .andWhere("Upvotes.postId = :postId", { postId: post.id })
-          .getOne();
-
-        if (isUpvoted) {
-          feedRes.push({
-            upvoted: true,
-            downvoted: false,
-            post: post,
-          });
-        } else {
-          const isDownvoted = await Downvotes.createQueryBuilder()
-            .where("Downvotes.userId = :userId", { userId: userId })
-            .andWhere("Downvotes.postId = :postId", { postId: post.id })
+        if (userId) {
+          const isUpvoted = await Upvotes.createQueryBuilder()
+            .where("Upvotes.userId = :userId", { userId: userId })
+            .andWhere("Upvotes.postId = :postId", { postId: post.id })
             .getOne();
 
-          if (isDownvoted) {
+          if (isUpvoted) {
             feedRes.push({
-              upvoted: false,
-              downvoted: true,
-              post: post,
-            });
-          } else {
-            feedRes.push({
-              upvoted: false,
+              upvoted: true,
               downvoted: false,
               post: post,
             });
+          } else {
+            const isDownvoted = await Downvotes.createQueryBuilder()
+              .where("Downvotes.userId = :userId", { userId: userId })
+              .andWhere("Downvotes.postId = :postId", { postId: post.id })
+              .getOne();
+
+            if (isDownvoted) {
+              feedRes.push({
+                upvoted: false,
+                downvoted: true,
+                post: post,
+              });
+            } else {
+              feedRes.push({
+                upvoted: false,
+                downvoted: false,
+                post: post,
+              });
+            }
           }
+        } else {
+          feedRes.push({
+            upvoted: false,
+            downvoted: false,
+            post: post,
+          });
         }
       }
       return feedRes;

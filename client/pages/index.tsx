@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/post";
 import { Ctx } from "../context";
+import { FeedResponse } from "../generated/graphql";
 
 export default function Home() {
-  const { sdk, setAuth, setUserInfo } = useContext(Ctx);
-  const [posts, setPosts] = useState([]);
+  const { sdk, setAuth, setUserInfo, userInfo } = useContext(Ctx);
+  const [posts, setPosts] = useState<FeedResponse[]>([]);
   let token: string;
 
   useEffect(() => {
@@ -21,21 +22,33 @@ export default function Home() {
         }
       })();
     }
-    (async () => {
-      const { feed } = await sdk.feed();
-      setPosts(feed);
-    })();
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      (async () => {
+        let { feed } = await sdk.feed({
+          userId: userInfo.id,
+        });
+        setPosts(feed as FeedResponse[]);
+      })();
+    }
+  }, [userInfo]);
   return (
     <div>
-      {posts.map((post, key) => (
-        <Post
-          title={post.title}
-          body={post.body}
-          user={post.user.name}
-          key={key}
-        ></Post>
-      ))}
+      {posts
+        .sort((a, b) => b.post.totalVotes - a.post.totalVotes)
+        .map((post, key) => (
+          <Post
+            title={post.post.title}
+            body={post.post.body}
+            user={post.post.user.name}
+            votes={post.post.totalVotes}
+            upvoted={post.upvoted}
+            downvoted={post.downvoted}
+            key={key}
+          ></Post>
+        ))}
     </div>
   );
 }

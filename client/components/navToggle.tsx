@@ -10,24 +10,29 @@ const NavToggle: React.FC = () => {
   return (
     <>
       {auth ? (
-        <div className="flex w-52 justify-end ">
+        <div className="flex ">
           <Link href="/">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline ">
+            <h1 className="font-rubik font-light text-xs mt-3 hover:underline">
               feed
             </h1>
           </Link>
           <Link href="/post">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline ">
+            <h1 className="font-rubik font-light text-xs mt-3 pl-2 hover:underline ">
               post
             </h1>
           </Link>
           <Link href="/profile/">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline truncate">
+            <h1
+              className={`font-rubik font-light text-xs mt-3 pl-2 hover:underline ${(() => {
+                if (userInfo.name.split("").length > 7) return " w-14 truncate";
+                else "";
+              })()} `}
+            >
               {userInfo ? userInfo.name : ""}
             </h1>
           </Link>
           <h1
-            className="font-rubik font-light text-xs mt-4 pl-2 hover:underline "
+            className="font-rubik font-light text-xs mt-3 pl-2 hover:underline "
             onClick={() => {
               localStorage.removeItem("token");
               router.reload();
@@ -37,19 +42,19 @@ const NavToggle: React.FC = () => {
           </h1>
         </div>
       ) : (
-        <div className=" flex justify-end flex-wrap py-3">
+        <div className="flex ">
           <Link href="/">
-            <h1 className="font-rubik font-light text-xs pl-2 hover:underline">
+            <h1 className="font-rubik font-light mt-3 text-xs hover:underline">
               feed
             </h1>
           </Link>
           <Link href="/login/">
-            <h1 className="font-rubik font-light text-xs  pl-2 hover:underline">
+            <h1 className="font-rubik font-light text-xs  mt-3 pl-2 hover:underline">
               login
             </h1>
           </Link>
           <Link href="/register">
-            <h1 className="font-rubik font-light text-xs pl-2  hover:underline">
+            <h1 className="font-rubik font-light text-xs mt-3 pl-2  hover:underline">
               register
             </h1>
           </Link>
