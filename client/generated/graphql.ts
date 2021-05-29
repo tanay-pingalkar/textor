@@ -17,18 +17,12 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   register: RegisterResponse;
-  login: RegisterResponse;
   post: PostResponse;
 };
 
 
 export type MutationRegisterArgs = {
   registerInfo: RegisterInput;
-};
-
-
-export type MutationLoginArgs = {
-  loginInfo: LoginInput;
 };
 
 
@@ -50,8 +44,14 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   getAllUsers: Array<Users>;
+  login: RegisterResponse;
   auth: AuthResponse;
   feed: Array<Posts>;
+};
+
+
+export type QueryLoginArgs = {
+  loginInfo: LoginInput;
 };
 
 
@@ -105,18 +105,9 @@ export type RegisterResponse = {
   token?: Maybe<Scalars['String']>;
 };
 
-export type LoginMutationVariables = Exact<{
-  nameOrEmail: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type LoginMutation = (
-  { __typename?: 'Mutation' }
-  & { login: (
-    { __typename?: 'registerResponse' }
-    & Pick<RegisterResponse, 'msg' | 'token'>
-  ) }
+export type MsgAndTokenFragment = (
+  { __typename?: 'registerResponse' }
+  & Pick<RegisterResponse, 'msg' | 'token'>
 );
 
 export type PostMutationVariables = Exact<{
@@ -149,7 +140,7 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'registerResponse' }
-    & Pick<RegisterResponse, 'msg' | 'token'>
+    & MsgAndTokenFragment
   ) }
 );
 
@@ -193,13 +184,24 @@ export type HelloQuery = (
   & Pick<Query, 'hello'>
 );
 
+export type LoginQueryVariables = Exact<{
+  nameOrEmail: Scalars['String'];
+  password: Scalars['String'];
+}>;
 
-export const LoginDocument = gql`
-    mutation login($nameOrEmail: String!, $password: String!) {
-  login(loginInfo: {nameOrEmail: $nameOrEmail, password: $password}) {
-    msg
-    token
-  }
+
+export type LoginQuery = (
+  { __typename?: 'Query' }
+  & { login: (
+    { __typename?: 'registerResponse' }
+    & MsgAndTokenFragment
+  ) }
+);
+
+export const MsgAndTokenFragmentDoc = gql`
+    fragment msgAndToken on registerResponse {
+  msg
+  token
 }
     `;
 export const PostDocument = gql`
@@ -216,11 +218,10 @@ export const PostDocument = gql`
 export const RegisterDocument = gql`
     mutation register($name: String!, $email: String!, $password: String!) {
   register(registerInfo: {name: $name, email: $email, password: $password}) {
-    msg
-    token
+    ...msgAndToken
   }
 }
-    `;
+    ${MsgAndTokenFragmentDoc}`;
 export const AuthDocument = gql`
     query auth($token: String!) {
   auth(token: $token) {
@@ -248,6 +249,13 @@ export const HelloDocument = gql`
   hello
 }
     `;
+export const LoginDocument = gql`
+    query login($nameOrEmail: String!, $password: String!) {
+  login(loginInfo: {nameOrEmail: $nameOrEmail, password: $password}) {
+    ...msgAndToken
+  }
+}
+    ${MsgAndTokenFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -256,9 +264,6 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    login(variables: LoginMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LoginMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<LoginMutation>(LoginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'login');
-    },
     post(variables: PostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PostMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<PostMutation>(PostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'post');
     },
@@ -273,6 +278,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     hello(variables?: HelloQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<HelloQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<HelloQuery>(HelloDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'hello');
+    },
+    login(variables: LoginQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LoginQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LoginQuery>(LoginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'login');
     }
   };
 }

@@ -4,10 +4,9 @@ interface props {
   user: string;
   title: string;
   body: string;
-  key: number;
 }
 
-const Post: React.FC<props> = ({ title, body, user, key }) => {
+const Post: React.FC<props> = ({ title, body, user }) => {
   return (
     <div className="px-5 pt-2 pb-1 border-b-2 border-white">
       <div className="flex justify-between">

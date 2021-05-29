@@ -55,7 +55,7 @@ export class users {
     }
   }
 
-  @Mutation(() => registerResponse)
+  @Query(() => registerResponse)
   async login(
     @Arg("loginInfo") loginInfo: loginInput
   ): Promise<registerResponse> {

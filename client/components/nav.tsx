@@ -26,7 +26,7 @@ const Nav: React.FC<props> = (props) => {
       where = "Register";
       break;
     case "/profile":
-      where = "Your profile";
+      where = "Profile";
       break;
     case "/post":
       where = "Post";

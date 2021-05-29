@@ -10,7 +10,7 @@ const NavToggle: React.FC = () => {
   return (
     <>
       {auth ? (
-        <div className="flex truncate w-52 justify-end">
+        <div className="flex w-52 justify-end ">
           <Link href="/">
             <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline ">
               feed
@@ -37,19 +37,19 @@ const NavToggle: React.FC = () => {
           </h1>
         </div>
       ) : (
-        <div className="flex">
+        <div className=" flex justify-end flex-wrap py-3">
           <Link href="/">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline">
+            <h1 className="font-rubik font-light text-xs pl-2 hover:underline">
               feed
             </h1>
           </Link>
           <Link href="/login/">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline">
+            <h1 className="font-rubik font-light text-xs  pl-2 hover:underline">
               login
             </h1>
           </Link>
           <Link href="/register">
-            <h1 className="font-rubik font-light text-xs mt-4 pl-2 hover:underline">
+            <h1 className="font-rubik font-light text-xs pl-2  hover:underline">
               register
             </h1>
           </Link>

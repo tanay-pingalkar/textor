@@ -1,6 +1,5 @@
-mutation login($nameOrEmail: String!, $password: String!) {
+query login($nameOrEmail: String!, $password: String!) {
   login(loginInfo: { nameOrEmail: $nameOrEmail, password: $password }) {
-    msg
-    token
+    ...msgAndToken
   }
 }

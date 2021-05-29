@@ -2,6 +2,8 @@ import { Connection, createConnection } from "typeorm";
 import dotenv from "dotenv";
 import { Users } from "../entities/user";
 import { Posts } from "../entities/post";
+import { Upvotes } from "../entities/upvote";
+import { Downvotes } from "../entities/downvote";
 
 dotenv.config();
 export const createCon = async (): Promise<Connection> => {
@@ -11,7 +13,7 @@ export const createCon = async (): Promise<Connection> => {
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
     host: process.env.HOST || "localhost",
-    entities: [Users, Posts],
+    entities: [Users, Posts, Upvotes, Downvotes],
     synchronize: true,
   });
 };

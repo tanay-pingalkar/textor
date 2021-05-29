@@ -1,0 +1,4 @@
+fragment msgAndToken on registerResponse {
+  msg
+  token
+}
