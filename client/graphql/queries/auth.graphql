@@ -1,5 +1,5 @@
-query auth($token: String!) {
-  auth(token: $token) {
+query auth {
+  auth {
     msg
     user {
       id

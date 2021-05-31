@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
+import { sdk } from "../client";
 import { Ctx } from "../context";
 
 export default function Login() {
   const [password, setPassword] = useState("");
   const [nameOrEmail, setNameOrEmail] = useState("");
   const [error, setError] = useState("");
-  const { sdk } = useContext(Ctx);
   const router = useRouter();
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -20,8 +20,7 @@ export default function Login() {
         nameOrEmail: nameOrEmail,
         password: password,
       });
-      if (login.msg === "great" && login.token) {
-        localStorage.setItem("token", login.token);
+      if (login.msg === "great") {
         router.push("/");
       } else {
         setError("*" + login.msg);

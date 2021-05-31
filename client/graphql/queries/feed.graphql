@@ -1,5 +1,5 @@
-query feed($userId: String, $lastPostId: String) {
-  feed(feedInfo: { userId: $userId, lastPostId: $lastPostId }) {
+query feed($lastPostId: String) {
+  feed(feedInfo: { lastPostId: $lastPostId }) {
     upvoted
     downvoted
     post {

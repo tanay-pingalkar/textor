@@ -31,6 +31,7 @@ export type Downvotes = {
 export type Mutation = {
   __typename?: 'Mutation';
   register: RegisterResponse;
+  logout: Scalars['Boolean'];
   post: PostResponse;
   upvote: UpvoteResponse;
   downvote: DownvoteResponse;
@@ -72,7 +73,6 @@ export type Posts = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  getAllUsers: Array<Users>;
   login: RegisterResponse;
   auth: AuthResponse;
   feed: Array<FeedResponse>;
@@ -81,11 +81,6 @@ export type Query = {
 
 export type QueryLoginArgs = {
   loginInfo: LoginInput;
-};
-
-
-export type QueryAuthArgs = {
-  token: Scalars['String'];
 };
 
 
@@ -133,7 +128,6 @@ export type DownvoteResponse = {
 };
 
 export type FeedInput = {
-  userId?: Maybe<Scalars['String']>;
   lastPostId?: Maybe<Scalars['String']>;
 };
 
@@ -152,7 +146,6 @@ export type LoginInput = {
 export type PostInput = {
   title: Scalars['String'];
   body: Scalars['String'];
-  userId: Scalars['String'];
 };
 
 export type PostResponse = {
@@ -170,7 +163,6 @@ export type RegisterInput = {
 export type RegisterResponse = {
   __typename?: 'registerResponse';
   msg: Scalars['String'];
-  token?: Maybe<Scalars['String']>;
 };
 
 export type UpvoteResponse = {
@@ -186,13 +178,20 @@ export type VoteInput = {
 
 export type MsgAndTokenFragment = (
   { __typename?: 'registerResponse' }
-  & Pick<RegisterResponse, 'msg' | 'token'>
+  & Pick<RegisterResponse, 'msg'>
+);
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type PostMutationVariables = Exact<{
   title: Scalars['String'];
   body: Scalars['String'];
-  userId: Scalars['String'];
 }>;
 
 
@@ -223,9 +222,7 @@ export type RegisterMutation = (
   ) }
 );
 
-export type AuthQueryVariables = Exact<{
-  token: Scalars['String'];
-}>;
+export type AuthQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AuthQuery = (
@@ -241,7 +238,6 @@ export type AuthQuery = (
 );
 
 export type FeedQueryVariables = Exact<{
-  userId?: Maybe<Scalars['String']>;
   lastPostId?: Maybe<Scalars['String']>;
 }>;
 
@@ -287,12 +283,16 @@ export type LoginQuery = (
 export const MsgAndTokenFragmentDoc = gql`
     fragment msgAndToken on registerResponse {
   msg
-  token
+}
+    `;
+export const LogoutDocument = gql`
+    mutation logout {
+  logout
 }
     `;
 export const PostDocument = gql`
-    mutation post($title: String!, $body: String!, $userId: String!) {
-  post(postInfo: {title: $title, body: $body, userId: $userId}) {
+    mutation post($title: String!, $body: String!) {
+  post(postInfo: {title: $title, body: $body}) {
     post {
       title
       body
@@ -309,8 +309,8 @@ export const RegisterDocument = gql`
 }
     ${MsgAndTokenFragmentDoc}`;
 export const AuthDocument = gql`
-    query auth($token: String!) {
-  auth(token: $token) {
+    query auth {
+  auth {
     msg
     user {
       id
@@ -320,8 +320,8 @@ export const AuthDocument = gql`
 }
     `;
 export const FeedDocument = gql`
-    query feed($userId: String, $lastPostId: String) {
-  feed(feedInfo: {userId: $userId, lastPostId: $lastPostId}) {
+    query feed($lastPostId: String) {
+  feed(feedInfo: {lastPostId: $lastPostId}) {
     upvoted
     downvoted
     post {
@@ -355,13 +355,16 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    logout(variables?: LogoutMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutation>(LogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'logout');
+    },
     post(variables: PostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PostMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<PostMutation>(PostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'post');
     },
     register(variables: RegisterMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RegisterMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RegisterMutation>(RegisterDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'register');
     },
-    auth(variables: AuthQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AuthQuery> {
+    auth(variables?: AuthQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AuthQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AuthQuery>(AuthDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'auth');
     },
     feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {

@@ -13,6 +13,7 @@
     "apollo-server": "^2.24.1",
     "argon2": "^0.27.2",
     "class-validator": "^0.13.1",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
@@ -23,6 +24,9 @@
     "typeorm": "^0.2.32"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^8.5.1"
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/node": "^15.6.1"
   }
 }

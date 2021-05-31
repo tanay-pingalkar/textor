@@ -1,5 +1,5 @@
-mutation post($title: String!, $body: String!, $userId: String!) {
-  post(postInfo: { title: $title, body: $body, userId: $userId }) {
+mutation post($title: String!, $body: String!) {
+  post(postInfo: { title: $title, body: $body }) {
     post {
       title
       body

@@ -7,9 +7,6 @@ import { registerEnumType } from "type-graphql";
 export class registerResponse {
   @Field(() => String)
   msg: String;
-
-  @Field(() => String, { nullable: true })
-  token?: String;
 }
 
 @ObjectType()

@@ -1,26 +1,48 @@
 import { Posts } from "../entities/post";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { feedInput, postInput } from "../utils/inputs";
 import { feedResponse, postResponse } from "../utils/responses";
 import { Users } from "../entities/user";
 import { Upvotes } from "../entities/upvote";
 import { Downvotes } from "../entities/downvote";
+import { MyContext } from "src/utils/types";
+import jwt from "jsonwebtoken";
 
 @Resolver()
 export class posts {
   @Mutation(() => postResponse)
-  async post(@Arg("postInfo") postInfo: postInput): Promise<postResponse> {
-    const { title, body, userId } = postInfo;
+  async post(
+    @Arg("postInfo") postInfo: postInput,
+    @Ctx() { req }: MyContext
+  ): Promise<postResponse> {
+    const { title, body } = postInfo;
 
+    let userId;
+    if (req.cookies.token) {
+      try {
+        const obj = jwt.verify(req.cookies.token, process.env.JWT_SECRET) as {
+          user_id: string;
+        };
+        userId = obj.user_id;
+      } catch {
+        return {
+          msg: "please login to post",
+        };
+      }
+    } else {
+      return {
+        msg: "please login to post ",
+      };
+    }
     if (title.length <= 3) {
       return {
         msg: "title should be greater than 3",
       };
     }
 
-    if (title.length >= 20) {
+    if (title.length >= 25) {
       return {
-        msg: "title should be less than 20",
+        msg: "title should be less than 35",
       };
     }
 
@@ -60,8 +82,19 @@ export class posts {
   }
 
   @Query(() => [feedResponse])
-  async feed(@Arg("feedInfo") feedInfo: feedInput): Promise<feedResponse[]> {
-    const { userId, lastPostId } = feedInfo;
+  async feed(
+    @Arg("feedInfo") feedInfo: feedInput,
+    @Ctx() { req }: MyContext
+  ): Promise<feedResponse[]> {
+    const { lastPostId } = feedInfo;
+    let userId;
+    if (req.cookies.token) {
+      const obj = jwt.verify(req.cookies.token, process.env.JWT_SECRET) as {
+        user_id: string;
+      };
+      userId = obj.user_id;
+    }
+
     const feedRes: feedResponse[] = [];
     try {
       let posts: Posts[];

@@ -28,9 +28,6 @@ export class postInput {
 
   @Field(() => String)
   body: string;
-
-  @Field(() => String)
-  userId: string;
 }
 
 @InputType()
@@ -44,9 +41,6 @@ export class voteInput {
 
 @InputType()
 export class feedInput {
-  @Field(() => String, { nullable: true })
-  userId: string;
-
   @Field(() => String, { nullable: true })
   lastPostId: string;
 }

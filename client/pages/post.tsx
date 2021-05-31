@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useEffect, useState } from "react";
+import { sdk } from "../client";
 import { Ctx } from "../context";
 
 export default function Post() {
-  const { auth, userInfo, sdk, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, userInfo, setAuth, setUserInfo } = useContext(Ctx);
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -12,25 +13,17 @@ export default function Post() {
 
   useEffect(() => {
     if (!auth) {
-      if (typeof window !== "undefined") {
-        token = localStorage.getItem("token");
-      }
-      if (token) {
-        (async () => {
-          const { auth } = await sdk.auth({ token: token });
+      (async () => {
+        const { auth } = await sdk.auth();
 
-          if (auth.msg === "great" && auth.user) {
-            setAuth(true);
-            setUserInfo(auth.user);
-          } else {
-            alert("login please");
-            router.push("/login");
-          }
-        })();
-      } else {
-        alert("login please");
-        router.push("/login");
-      }
+        if (auth.msg === "great" && auth.user) {
+          setAuth(true);
+          setUserInfo(auth.user);
+        } else {
+          alert("login please");
+          router.push("/login");
+        }
+      })();
     }
   }, [auth]);
 
@@ -43,7 +36,6 @@ export default function Post() {
     const res = await sdk.post({
       title: title,
       body: body,
-      userId: userInfo.id,
     });
     if (res.post.msg === "great") {
       router.push("/");

@@ -1,22 +1,19 @@
 import { loginInput, registerInput } from "../utils/inputs";
 import { authResponse, registerResponse } from "../utils/responses";
 import { ValidateEmail } from "../utils/validateEmail";
-import { Resolver, Mutation, Arg, Query } from "type-graphql";
+import { Resolver, Mutation, Arg, Query, Ctx } from "type-graphql";
 import argon2 from "argon2";
 import { Users } from "../entities/user";
 import { jwtgen } from "../utils/jwtgen";
 import jwt from "jsonwebtoken";
+import { MyContext } from "src/utils/types";
 
 @Resolver()
 export class users {
-  @Query(() => [Users])
-  getAllUsers(): Promise<Users[]> {
-    return Users.find();
-  }
-
   @Mutation(() => registerResponse)
   async register(
-    @Arg("registerInfo") registerInfo: registerInput
+    @Arg("registerInfo") registerInfo: registerInput,
+    @Ctx() { res }: MyContext
   ): Promise<registerResponse> {
     if (!ValidateEmail(registerInfo.email)) {
       return {
@@ -50,9 +47,9 @@ export class users {
       registerInfo.password = await argon2.hash(registerInfo.password);
       const user = await Users.create(registerInfo).save();
       const token = jwtgen(user.id);
+      res.cookie("token", token, { httpOnly: true });
       return {
         msg: "great",
-        token: token,
       };
     } catch (error) {
       return {
@@ -63,7 +60,8 @@ export class users {
 
   @Query(() => registerResponse)
   async login(
-    @Arg("loginInfo") loginInfo: loginInput
+    @Arg("loginInfo") loginInfo: loginInput,
+    @Ctx() { res }: MyContext
   ): Promise<registerResponse> {
     let user: Users;
     if (ValidateEmail(loginInfo.nameOrEmail)) {
@@ -81,9 +79,9 @@ export class users {
     const isValidate = await argon2.verify(user.password, loginInfo.password);
     if (isValidate) {
       const token = jwtgen(user.id);
+      res.cookie("token", token, { httpOnly: true });
       return {
         msg: "great",
-        token: token,
       };
     } else {
       return {
@@ -93,10 +91,11 @@ export class users {
   }
 
   @Query(() => authResponse)
-  async auth(@Arg("token") token: string): Promise<authResponse> {
+  async auth(@Ctx() { req }: MyContext): Promise<authResponse> {
     let verified: any;
+
     try {
-      verified = jwt.verify(token, process.env.JWT_SECRET);
+      verified = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
     } catch (err) {
       return {
         msg: "token not valid",
@@ -107,5 +106,15 @@ export class users {
       msg: "great",
       user: user,
     };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { res }: MyContext) {
+    try {
+      res.clearCookie("token");
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

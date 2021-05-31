@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
+import { sdk } from "../client";
 import { Ctx } from "../context";
 
 export default function Register() {
@@ -7,7 +8,6 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { sdk } = useContext(Ctx);
   const router = useRouter();
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,8 +22,7 @@ export default function Register() {
         email: email,
         password,
       });
-      if (register.msg === "great" && register.token) {
-        localStorage.setItem("token", register.token);
+      if (register.msg === "great") {
         router.push("/");
       } else {
         setError("*" + register.msg);

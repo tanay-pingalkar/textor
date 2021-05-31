@@ -1,20 +1,18 @@
+import { GraphQLClient } from "graphql-request";
+import { GetServerSideProps } from "next";
 import { useContext, useEffect, useState } from "react";
+import { sdk } from "../client";
 import Post from "../components/post";
 import { Ctx } from "../context";
-import { FeedResponse } from "../generated/graphql";
+import { FeedResponse, getSdk } from "../generated/graphql";
 
-export default function Home() {
-  const { sdk, setAuth, setUserInfo, userInfo } = useContext(Ctx);
-  const [posts, setPosts] = useState<FeedResponse[]>([]);
-  let token: string;
-
+export default function Home({ feed }) {
+  const [posts, setPosts] = useState<FeedResponse[]>(feed);
+  const { auth, setAuth, setUserInfo, userInfo } = useContext(Ctx);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      token = localStorage.getItem("token");
-    }
-    if (token) {
+    if (!auth) {
       (async () => {
-        const { auth } = await sdk.auth({ token: token });
+        const { auth } = await sdk.auth();
 
         if (auth.msg === "great" && auth.user) {
           setAuth(true);
@@ -24,16 +22,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!token) {
-      (async () => {
-        let { feed } = await sdk.feed({
-          userId: userInfo.id,
-        });
-        setPosts(feed as FeedResponse[]);
-      })();
-    }
-  }, [userInfo]);
   return (
     <div>
       {posts
@@ -52,3 +40,12 @@ export default function Home() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  let { feed } = await sdk.feed({}, req.headers as HeadersInit);
+  return {
+    props: {
+      feed,
+    },
+  };
+};

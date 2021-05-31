@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
+import { sdk } from "../client";
 import { Ctx } from "../context";
 
 const NavToggle: React.FC = () => {
@@ -33,8 +34,8 @@ const NavToggle: React.FC = () => {
           </Link>
           <h1
             className="font-rubik font-light text-xs mt-3 pl-2 hover:underline "
-            onClick={() => {
-              localStorage.removeItem("token");
+            onClick={async () => {
+              await sdk.logout();
               router.reload();
             }}
           >
