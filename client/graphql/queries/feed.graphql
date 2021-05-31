@@ -1,8 +1,9 @@
 query feed($lastPostId: String) {
-  feed(feedInfo: { lastPostId: $lastPostId }) {
+  feed(lastPostId: $lastPostId) {
     upvoted
     downvoted
     post {
+      id
       title
       body
       totalVotes

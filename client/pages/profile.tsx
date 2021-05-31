@@ -4,7 +4,7 @@ import { sdk } from "../client";
 import { Ctx } from "../context";
 
 export default function Home(): JSX.Element {
-  const { auth, userInfo, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, name, setAuth, setName } = useContext(Ctx);
   const router = useRouter();
   console.log(auth);
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function Home(): JSX.Element {
 
         if (auth.msg === "great" && auth.user) {
           setAuth(true);
-          setUserInfo(auth.user);
+          setName(auth.user.name);
         } else {
           alert("login please");
           router.push("/login");
@@ -26,7 +26,7 @@ export default function Home(): JSX.Element {
   return (
     <div>
       <div className="py-2 px-5 font-rubik border-white border-b-2 flex justify-between">
-        <h1 className="text-2xl ">{userInfo.name}</h1>
+        <h1 className="text-2xl ">{name}</h1>
         <button className=" bg-gray-300 text-gray-800 px-3 h-6 mt-1 text-xs  hover:bg-black hover:text-white rounded-sm hover:underline  ">
           edit
         </button>

@@ -1,0 +1,6 @@
+mutation downvote($postId: String!) {
+  downvote(postId: $postId) {
+    msg
+    action
+  }
+}

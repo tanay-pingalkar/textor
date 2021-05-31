@@ -10,7 +10,7 @@ interface props {
 }
 const Home: React.FC<props> = ({ feed }) => {
   const [posts] = useState<FeedResponse[]>(feed);
-  const { auth, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, setAuth, setName } = useContext(Ctx);
   useEffect(() => {
     if (!auth) {
       (async () => {
@@ -18,7 +18,7 @@ const Home: React.FC<props> = ({ feed }) => {
 
         if (auth.msg === "great" && auth.user) {
           setAuth(true);
-          setUserInfo(auth.user);
+          setName(auth.user.name);
         }
       })();
     }
@@ -37,6 +37,7 @@ const Home: React.FC<props> = ({ feed }) => {
             upvoted={post.upvoted}
             downvoted={post.downvoted}
             key={key}
+            postId={post.post.id}
           ></Post>
         ))}
     </div>

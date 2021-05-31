@@ -4,7 +4,7 @@ import { sdk } from "../client";
 import { Ctx } from "../context";
 
 export default function Post(): JSX.Element {
-  const { auth, setAuth, setUserInfo } = useContext(Ctx);
+  const { auth, setAuth, setName } = useContext(Ctx);
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -17,7 +17,7 @@ export default function Post(): JSX.Element {
 
         if (auth.msg === "great" && auth.user) {
           setAuth(true);
-          setUserInfo(auth.user);
+          setName(auth.user.name);
         } else {
           alert("login please");
           router.push("/login");

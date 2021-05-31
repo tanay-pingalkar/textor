@@ -1,28 +1,42 @@
-import { voteInput } from "../utils/inputs";
 import {
   DownvoteAction,
   downvoteResponse,
   UpvoteAction,
   upvoteResponse,
 } from "../utils/responses";
-import { Resolver, Mutation, Arg } from "type-graphql";
+import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { Users } from "../entities/user";
 import { Posts } from "../entities/post";
 import { Upvotes } from "../entities/upvote";
 import { Downvotes } from "../entities/downvote";
+import { decodedToken, MyContext } from "../utils/types";
+import jwt from "jsonwebtoken";
 
 @Resolver()
 export class voting {
   /*-------------------upvote-------------------------------*/
   @Mutation(() => upvoteResponse)
   async upvote(
-    @Arg("upvoteInfo") upvoteInfo: voteInput
+    @Arg("postId") postId: string,
+    @Ctx() { req }: MyContext
   ): Promise<upvoteResponse> {
-    const { postId, userId } = upvoteInfo;
+    let userId;
+    if (req.cookies.token) {
+      const obj = jwt.verify(
+        req.cookies.token,
+        process.env.JWT_SECRET
+      ) as decodedToken;
+      userId = obj.user_id;
+    } else {
+      return {
+        msg: "user not exists",
+      };
+    }
     try {
       const user = await Users.findOne(userId, {
         relations: ["upvotes", "downvotes"],
       });
+      console.log(user);
       const post = await Posts.findOne(postId, {
         relations: ["upvotes", "downvotes"],
       });
@@ -89,9 +103,21 @@ export class voting {
 
   @Mutation(() => downvoteResponse)
   async downvote(
-    @Arg("upvoteInfo") upvoteInfo: voteInput
+    @Arg("postId") postId: string,
+    @Ctx() { req }: MyContext
   ): Promise<downvoteResponse> {
-    const { postId, userId } = upvoteInfo;
+    let userId;
+    if (req.cookies.token) {
+      const obj = jwt.verify(
+        req.cookies.token,
+        process.env.JWT_SECRET
+      ) as decodedToken;
+      userId = obj.user_id;
+    } else {
+      return {
+        msg: "user not exists",
+      };
+    }
     try {
       const user = await Users.findOne(userId, {
         relations: ["upvotes", "downvotes"],

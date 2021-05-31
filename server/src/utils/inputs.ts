@@ -29,18 +29,3 @@ export class postInput {
   @Field(() => String)
   body: string;
 }
-
-@InputType()
-export class voteInput {
-  @Field(() => String)
-  postId: string;
-
-  @Field(() => String)
-  userId: string;
-}
-
-@InputType()
-export class feedInput {
-  @Field(() => String, { nullable: true })
-  lastPostId: string;
-}

@@ -1,11 +1,11 @@
 import { Posts } from "../entities/post";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { feedInput, postInput } from "../utils/inputs";
+import { postInput } from "../utils/inputs";
 import { feedResponse, postResponse } from "../utils/responses";
 import { Users } from "../entities/user";
 import { Upvotes } from "../entities/upvote";
 import { Downvotes } from "../entities/downvote";
-import { MyContext } from "src/utils/types";
+import { decodedToken, MyContext } from "src/utils/types";
 import jwt from "jsonwebtoken";
 
 @Resolver()
@@ -83,15 +83,15 @@ export class posts {
 
   @Query(() => [feedResponse])
   async feed(
-    @Arg("feedInfo") feedInfo: feedInput,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
+    @Arg("lastPostId", { nullable: true }) lastPostId?: string
   ): Promise<feedResponse[]> {
-    const { lastPostId } = feedInfo;
     let userId;
     if (req.cookies.token) {
-      const obj = jwt.verify(req.cookies.token, process.env.JWT_SECRET) as {
-        user_id: string;
-      };
+      const obj = jwt.verify(
+        req.cookies.token,
+        process.env.JWT_SECRET
+      ) as decodedToken;
       userId = obj.user_id;
     }
 

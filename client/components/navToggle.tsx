@@ -5,7 +5,7 @@ import { sdk } from "../client";
 import { Ctx } from "../context";
 
 const NavToggle: React.FC = () => {
-  const { auth, userInfo } = useContext(Ctx);
+  const { auth, name } = useContext(Ctx);
   const router = useRouter();
 
   return (
@@ -25,11 +25,11 @@ const NavToggle: React.FC = () => {
           <Link href="/profile/">
             <h1
               className={`font-rubik font-light text-xs mt-3 pl-2 hover:underline ${(() => {
-                if (userInfo.name.split("").length > 7) return " w-14 truncate";
+                if (name.split("").length > 7) return " w-14 truncate";
                 else "";
               })()} `}
             >
-              {userInfo ? userInfo.name : ""}
+              {name}
             </h1>
           </Link>
           <h1
