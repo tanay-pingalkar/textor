@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import { sdk } from "../client";
-import { Ctx } from "../context";
 
-export default function Register() {
+export default function Register(): JSX.Element {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

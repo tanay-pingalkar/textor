@@ -1,4 +1,4 @@
-const Vote = () => {
+const Vote = (): JSX.Element => {
   return (
     <svg
       width="12"

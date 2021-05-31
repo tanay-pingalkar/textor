@@ -92,10 +92,12 @@ export class users {
 
   @Query(() => authResponse)
   async auth(@Ctx() { req }: MyContext): Promise<authResponse> {
-    let verified: any;
+    let verified: { user_id: string };
 
     try {
-      verified = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+      verified = jwt.verify(req.cookies.token, process.env.JWT_SECRET) as {
+        user_id: string;
+      };
     } catch (err) {
       return {
         msg: "token not valid",
@@ -109,7 +111,7 @@ export class users {
   }
 
   @Mutation(() => Boolean)
-  logout(@Ctx() { res }: MyContext) {
+  logout(@Ctx() { res }: MyContext): boolean {
     try {
       res.clearCookie("token");
       return true;

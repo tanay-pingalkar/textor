@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import { sdk } from "../client";
-import { Ctx } from "../context";
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const [password, setPassword] = useState("");
   const [nameOrEmail, setNameOrEmail] = useState("");
   const [error, setError] = useState("");

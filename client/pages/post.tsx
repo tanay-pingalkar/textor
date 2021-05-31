@@ -3,13 +3,12 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import { sdk } from "../client";
 import { Ctx } from "../context";
 
-export default function Post() {
-  const { auth, userInfo, setAuth, setUserInfo } = useContext(Ctx);
+export default function Post(): JSX.Element {
+  const { auth, setAuth, setUserInfo } = useContext(Ctx);
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-  let token: string;
 
   useEffect(() => {
     if (!auth) {

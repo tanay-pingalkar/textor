@@ -1,4 +1,4 @@
-import { useMediaQuery, loadMediaQuery } from "react-responsive";
+import { useMediaQuery } from "react-responsive";
 import { useContext, useEffect, useState } from "react";
 import { Ctx } from "../context";
 import MainNav from "./desktopNav";

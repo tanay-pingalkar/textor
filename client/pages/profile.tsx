@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import { sdk } from "../client";
-import Post from "../components/post";
 import { Ctx } from "../context";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const { auth, userInfo, setAuth, setUserInfo } = useContext(Ctx);
   const router = useRouter();
   console.log(auth);

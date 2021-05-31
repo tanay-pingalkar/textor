@@ -6,13 +6,13 @@ import { registerEnumType } from "type-graphql";
 @ObjectType()
 export class registerResponse {
   @Field(() => String)
-  msg: String;
+  msg: string;
 }
 
 @ObjectType()
 export class authResponse {
   @Field(() => String)
-  msg?: String;
+  msg?: string;
 
   @Field(() => Users, { nullable: true })
   user?: Users;
@@ -21,7 +21,7 @@ export class authResponse {
 @ObjectType()
 export class postResponse {
   @Field(() => String)
-  msg?: String;
+  msg?: string;
 
   @Field(() => Posts, { nullable: true })
   post?: Posts;

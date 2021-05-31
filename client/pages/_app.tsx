@@ -3,7 +3,8 @@ import "../styles/global.css";
 import { useState } from "react";
 import { Ctx } from "../context";
 
-function MyApp({ Component, pageProps }) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function MyApp({ Component, pageProps }): JSX.Element {
   const [auth, setAuth] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "",

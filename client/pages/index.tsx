@@ -1,14 +1,16 @@
-import { GraphQLClient } from "graphql-request";
 import { GetServerSideProps } from "next";
 import { useContext, useEffect, useState } from "react";
 import { sdk } from "../client";
 import Post from "../components/post";
 import { Ctx } from "../context";
-import { FeedResponse, getSdk } from "../generated/graphql";
+import { FeedResponse } from "../generated/graphql";
 
-export default function Home({ feed }) {
-  const [posts, setPosts] = useState<FeedResponse[]>(feed);
-  const { auth, setAuth, setUserInfo, userInfo } = useContext(Ctx);
+interface props {
+  feed: FeedResponse[];
+}
+const Home: React.FC<props> = ({ feed }) => {
+  const [posts] = useState<FeedResponse[]>(feed);
+  const { auth, setAuth, setUserInfo } = useContext(Ctx);
   useEffect(() => {
     if (!auth) {
       (async () => {
@@ -39,10 +41,12 @@ export default function Home({ feed }) {
         ))}
     </div>
   );
-}
+};
+
+export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  let { feed } = await sdk.feed({}, req.headers as HeadersInit);
+  const { feed } = await sdk.feed({}, req.headers as HeadersInit);
   return {
     props: {
       feed,
