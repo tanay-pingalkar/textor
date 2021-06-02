@@ -4,3 +4,4 @@ server/node_modules
 client/.next
 server/dist
 client/generated
+client/next.config.js

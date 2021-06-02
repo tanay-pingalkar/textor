@@ -22,7 +22,7 @@ const NavToggle: React.FC = () => {
               post
             </h1>
           </Link>
-          <Link href="/profile/">
+          <Link href={`/profile/${name}`}>
             <h1
               className={`font-rubik font-light text-xs mt-3 pl-2 hover:underline ${(() => {
                 if (name.split("").length > 7) return " w-14 truncate";

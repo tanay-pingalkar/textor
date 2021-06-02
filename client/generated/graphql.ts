@@ -75,12 +75,18 @@ export type Query = {
   hello: Scalars['String'];
   login: RegisterResponse;
   auth: AuthResponse;
+  profile: ProfileResponse;
   feed: Array<FeedResponse>;
 };
 
 
 export type QueryLoginArgs = {
   loginInfo: LoginInput;
+};
+
+
+export type QueryProfileArgs = {
+  username: Scalars['String'];
 };
 
 
@@ -148,6 +154,14 @@ export type PostResponse = {
   __typename?: 'postResponse';
   msg: Scalars['String'];
   post?: Maybe<Posts>;
+};
+
+export type ProfileResponse = {
+  __typename?: 'profileResponse';
+  msg: Scalars['String'];
+  me?: Maybe<Scalars['Boolean']>;
+  user?: Maybe<Users>;
+  posts?: Maybe<Array<FeedResponse>>;
 };
 
 export type RegisterInput = {
@@ -297,6 +311,30 @@ export type LoginQuery = (
   ) }
 );
 
+export type ProfileQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type ProfileQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
+    { __typename?: 'profileResponse' }
+    & Pick<ProfileResponse, 'msg'>
+    & { user?: Maybe<(
+      { __typename?: 'Users' }
+      & Pick<Users, 'name' | 'email'>
+    )>, posts?: Maybe<Array<(
+      { __typename?: 'feedResponse' }
+      & Pick<FeedResponse, 'upvoted' | 'downvoted'>
+      & { post: (
+        { __typename?: 'Posts' }
+        & Pick<Posts, 'id' | 'title' | 'body' | 'totalVotes'>
+      ) }
+    )>> }
+  ) }
+);
+
 export const MsgAndTokenFragmentDoc = gql`
     fragment msgAndToken on registerResponse {
   msg
@@ -381,6 +419,27 @@ export const LoginDocument = gql`
   }
 }
     ${MsgAndTokenFragmentDoc}`;
+export const ProfileDocument = gql`
+    query profile($username: String!) {
+  profile(username: $username) {
+    msg
+    user {
+      name
+      email
+    }
+    posts {
+      upvoted
+      downvoted
+      post {
+        id
+        title
+        body
+        totalVotes
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -415,6 +474,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     login(variables: LoginQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LoginQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<LoginQuery>(LoginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'login');
+    },
+    profile(variables: ProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileQuery>(ProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'profile');
     }
   };
 }

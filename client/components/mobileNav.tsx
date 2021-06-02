@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import NavToggle from "./navToggle";
 
 interface props {
   where: string;
 }
 const MobileNav: React.FC<props> = ({ where }) => {
+  const router = useRouter();
   return (
     <div className="border-white border-b-2">
       <div className=" flex justify-between px-5">
@@ -13,7 +15,15 @@ const MobileNav: React.FC<props> = ({ where }) => {
         <NavToggle></NavToggle>
       </div>
       <div className="flex justify-center mb-3 px-5">
-        <input className="h-6 pl-1 w-full" placeholder="search"></input>
+        <input
+          className="h-6 pl-1 w-full"
+          placeholder="search"
+          onChange={(e) => {
+            if (e.target.value.trim() !== "") {
+              router.replace(`/search/${e.target.value}`);
+            }
+          }}
+        ></input>
       </div>
     </div>
   );

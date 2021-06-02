@@ -106,7 +106,7 @@ export class posts {
             "users",
             "users.id = Posts.userId"
           )
-          .where("Posts.id <= :lastPostId", { lastPostId: Number(lastPostId) })
+          .where("Posts.id < :lastPostId", { lastPostId: Number(lastPostId) })
           .andWhere("Posts.id >= :limit", { limit: Number(lastPostId) - 5 })
           .orderBy("Posts.id", "DESC")
           .getMany();

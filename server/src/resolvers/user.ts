@@ -1,12 +1,19 @@
 import { loginInput, registerInput } from "../utils/inputs";
-import { authResponse, registerResponse } from "../utils/responses";
+import {
+  authResponse,
+  feedResponse,
+  profileResponse,
+  registerResponse,
+} from "../utils/responses";
 import { ValidateEmail } from "../utils/validateEmail";
 import { Resolver, Mutation, Arg, Query, Ctx } from "type-graphql";
 import argon2 from "argon2";
 import { Users } from "../entities/user";
 import { jwtgen } from "../utils/jwtgen";
 import jwt from "jsonwebtoken";
-import { MyContext } from "src/utils/types";
+import { decodedToken, MyContext } from "src/utils/types";
+import { Upvotes } from "../entities/upvote";
+import { Downvotes } from "../entities/downvote";
 
 @Resolver()
 export class users {
@@ -117,6 +124,90 @@ export class users {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  @Query(() => profileResponse)
+  async profile(
+    @Arg("username") username: string,
+    @Ctx() { req }: MyContext
+  ): Promise<profileResponse> {
+    let requestUserId;
+    if (req.cookies.token) {
+      try {
+        const obj = jwt.verify(
+          req.cookies.token,
+          process.env.JWT_SECRET
+        ) as decodedToken;
+        requestUserId = obj.user_id;
+      } catch {
+        /**/
+      }
+    }
+
+    try {
+      const user = await Users.findOne({
+        where: { name: username },
+        relations: ["posts"],
+      });
+      const feedRes: feedResponse[] = [];
+      if (user) {
+        for (const post of user.posts) {
+          if (user.id) {
+            const isUpvoted = await Upvotes.createQueryBuilder()
+              .where("Upvotes.userId = :userId", { userId: user.id })
+              .andWhere("Upvotes.postId = :postId", { postId: post.id })
+              .getOne();
+
+            if (isUpvoted) {
+              feedRes.push({
+                upvoted: true,
+                downvoted: false,
+                post: post,
+              });
+            } else {
+              const isDownvoted = await Downvotes.createQueryBuilder()
+                .where("Downvotes.userId = :userId", { userId: user.id })
+                .andWhere("Downvotes.postId = :postId", { postId: post.id })
+                .getOne();
+
+              if (isDownvoted) {
+                feedRes.push({
+                  upvoted: false,
+                  downvoted: true,
+                  post: post,
+                });
+              } else {
+                feedRes.push({
+                  upvoted: false,
+                  downvoted: false,
+                  post: post,
+                });
+              }
+            }
+          } else {
+            feedRes.push({
+              upvoted: false,
+              downvoted: false,
+              post: post,
+            });
+          }
+        }
+        return {
+          msg: "great",
+          user: user,
+          me: user.id === requestUserId,
+          posts: feedRes,
+        };
+      } else {
+        return {
+          msg: "user not found",
+        };
+      }
+    } catch {
+      return {
+        msg: "error while finding user",
+      };
     }
   }
 }

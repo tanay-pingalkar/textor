@@ -32,11 +32,12 @@ export class voting {
         msg: "user not exists",
       };
     }
+
     try {
       const user = await Users.findOne(userId, {
         relations: ["upvotes", "downvotes"],
       });
-      console.log(user);
+
       const post = await Posts.findOne(postId, {
         relations: ["upvotes", "downvotes"],
       });

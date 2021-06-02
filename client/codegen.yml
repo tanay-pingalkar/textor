@@ -1,5 +1,9 @@
 overwrite: true
-schema: "http://localhost:5000/graphql"
+schema:
+  - "http://localhost:5000/graphql":
+      headers:
+        Authorization: ${BEARER}
+
 documents: "**/*.graphql"
 generates:
   generated/graphql.ts:

@@ -29,14 +29,18 @@ const Nav: React.FC<props> = (props) => {
     case "/register":
       where = "Register";
       break;
-    case "/profile":
-      where = "Profile";
-      break;
     case "/post":
       where = "Post";
       break;
     default:
-      where = "Hmm";
+      if (router.pathname.includes("profile")) {
+        where = "Profile";
+      } else if (router.pathname.includes("search")) {
+        where = "Search";
+      } else {
+        where = "Hmm";
+      }
+
       break;
   }
   return (

@@ -6,5 +6,5 @@ export type MyContext = {
 };
 
 export interface decodedToken {
-  user_id: string;
+  user_id: number;
 }

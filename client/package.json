@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "gen": "graphql-codegen --config codegen.yml"
+    "gen": "graphql-codegen --require dotenv/config --config codegen.yml"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "next": "latest",

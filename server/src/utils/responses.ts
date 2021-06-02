@@ -74,3 +74,18 @@ export class feedResponse {
   @Field(() => Posts)
   post: Posts;
 }
+
+@ObjectType()
+export class profileResponse {
+  @Field(() => String)
+  msg: string;
+
+  @Field(() => Boolean, { nullable: true })
+  me?: boolean;
+
+  @Field(() => Users, { nullable: true })
+  user?: Users;
+
+  @Field(() => [feedResponse], { nullable: true })
+  posts?: feedResponse[];
+}

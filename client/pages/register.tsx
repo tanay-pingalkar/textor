@@ -54,7 +54,7 @@ export default function Register(): JSX.Element {
         onChange={(e) => setPassword(e.target.value)}
       />
       <h1 className="text-red-700 text-xs mt-3 -mb-2 w-64">{error}</h1>
-      <button className="mt-5 bg-gray-300 text-gray-800 px-2 py-1 hover:bg-black hover:text-white rounded-sm hover:underline">
+      <button className="mt-5 bg-gray-300 text-gray-800 px-2 hover:bg-black hover:text-white rounded-sm hover:underline">
         submit
       </button>
     </form>
