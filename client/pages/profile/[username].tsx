@@ -6,7 +6,7 @@ import { Ctx } from "../../context";
 import { ProfileResponse } from "../../generated/graphql";
 import Post from "../../components/post";
 
-const Home: React.FC<ProfileResponse> = ({ msg, me, user, posts }) => {
+const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
   const { auth, setAuth, setName } = useContext(Ctx);
 
   const router = useRouter();
@@ -32,7 +32,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user, posts }) => {
     <div>
       {msg === "great" ? (
         <>
-          <div className="py-2 px-5 font-rubik border-white border-b-2 flex justify-between">
+          <div className="py-2 px-5  border-white border-b-2 flex justify-between">
             <div>
               <h1 className="text-2xl font-semibold">
                 {user ? user.name : ""}
@@ -40,27 +40,21 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user, posts }) => {
               <h1 className="text-sm">email : {user ? user.email : ""}</h1>
               <h1 className="text-sm">points : 5</h1>
             </div>
-            {me ? (
-              <button className=" bg-gray-300 text-gray-800 px-3 h-6 mt-1 text-xs  hover:bg-black hover:text-white rounded-sm hover:underline  ">
-                edit
-              </button>
-            ) : (
-              <></>
-            )}
+            {me ? <button className="h-6 mt-2">edit</button> : <></>}
           </div>
-          <div className="py-2 px-5 font-rubik border-white border-b-2 flex">
-            <h1 className=" text-xs font-light hover:underline">your posts</h1>
+          <div className="py-2 px-5  border-white border-b-2 flex">
+            <p className="hover:underline text-sm">your posts</p>
           </div>
-          {posts.map((post, key) => (
+          {user.posts.map((post, key) => (
             <Post
-              title={post.post.title}
-              body={post.post.body}
+              title={post.title}
+              body={post.body}
               user={user.name}
-              votes={post.post.totalVotes}
+              votes={post.totalVotes}
               upvoted={post.upvoted}
               downvoted={post.downvoted}
               key={key}
-              postId={post.post.id}
+              postId={post.id}
             ></Post>
           ))}
         </>

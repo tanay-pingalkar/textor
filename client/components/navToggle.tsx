@@ -13,51 +13,41 @@ const NavToggle: React.FC = () => {
       {auth ? (
         <div className="flex ">
           <Link href="/">
-            <h1 className="font-rubik font-light text-xs mt-3 hover:underline">
-              feed
-            </h1>
+            <p className="mt-3 hover:underline">feed</p>
           </Link>
           <Link href="/post">
-            <h1 className="font-rubik font-light text-xs mt-3 pl-2 hover:underline ">
-              post
-            </h1>
+            <p className="font-light mt-3 pl-2 hover:underline ">post</p>
           </Link>
           <Link href={`/profile/${name}`}>
-            <h1
-              className={`font-rubik font-light text-xs mt-3 pl-2 hover:underline ${(() => {
+            <p
+              className={` mt-3 pl-2 hover:underline ${(() => {
                 if (name.split("").length > 7) return " w-14 truncate";
                 else "";
               })()} `}
             >
               {name}
-            </h1>
+            </p>
           </Link>
-          <h1
-            className="font-rubik font-light text-xs mt-3 pl-2 hover:underline "
+          <p
+            className="mt-3 pl-2 hover:underline "
             onClick={async () => {
               await sdk.logout();
               router.reload();
             }}
           >
             logout
-          </h1>
+          </p>
         </div>
       ) : (
         <div className="flex ">
           <Link href="/">
-            <h1 className="font-rubik font-light mt-3 text-xs hover:underline">
-              feed
-            </h1>
+            <p className="mt-3 hover:underline">feed</p>
           </Link>
           <Link href="/login/">
-            <h1 className="font-rubik font-light text-xs  mt-3 pl-2 hover:underline">
-              login
-            </h1>
+            <p className=" mt-3 pl-2 hover:underline">login</p>
           </Link>
           <Link href="/register">
-            <h1 className="font-rubik font-light text-xs mt-3 pl-2  hover:underline">
-              register
-            </h1>
+            <p className=" mt-3 pl-2 hover:underline">register</p>
           </Link>
         </div>
       )}

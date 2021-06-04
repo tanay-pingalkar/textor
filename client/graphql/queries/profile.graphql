@@ -1,14 +1,13 @@
 query profile($username: String!) {
   profile(username: $username) {
     msg
+    me
     user {
       name
       email
-    }
-    posts {
-      upvoted
-      downvoted
-      post {
+      posts {
+        upvoted
+        downvoted
         id
         title
         body

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply font-rubik;
+  }
+
+  p {
+    @apply font-rubik font-light text-xs;
+  }
+  button {
+    @apply px-3 bg-gray-300 hover:bg-black hover:text-white  hover:underline;
+  }
+}

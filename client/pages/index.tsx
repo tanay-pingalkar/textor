@@ -29,21 +29,21 @@ const Home: React.FC<props> = ({ feed }) => {
     <div>
       {posts.map((post, key) => (
         <Post
-          title={post.post.title}
-          body={post.post.body}
-          user={post.post.user.name}
-          votes={post.post.totalVotes}
+          title={post.title}
+          body={post.body}
+          user={post.user.name}
+          votes={post.totalVotes}
           upvoted={post.upvoted}
           downvoted={post.downvoted}
           key={key}
-          postId={post.post.id}
+          postId={post.id}
         ></Post>
       ))}
       <button
-        className="ml-5 hover:underline mt-2 mb-2 hover:bg-black hover:text-white px-2 bg-gray-300"
+        className="ml-5 mt-2 mb-2"
         onClick={async () => {
           const { feed } = await sdk.feed({
-            lastPostId: posts[posts.length - 1].post.id,
+            lastPostId: posts[posts.length - 1].id,
           });
           setPosts(posts.concat(feed as FeedResponse[]));
         }}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Votes from "./votes";
 
 interface props {
@@ -20,17 +21,15 @@ const Post: React.FC<props> = ({
   postId,
 }) => {
   return (
-    <div className="px-5 pt-2 pb-1 border-b-2 border-white">
+    <div className="px-5 pt-2 pb-1 border-b-2 border-white ">
       <div className="flex justify-between">
-        <h1 className="text-lg sm:text-xl font-rubik font-medium">{title}</h1>
-        <h1 className="text-xs font-extralight hover:underline">
-          posted by {user}
-        </h1>
+        <h1 className="text-lg sm:text-xl font-medium">{title}</h1>
+        <Link href={`/profile/${user}`}>
+          <p className="hover:underline">posted by {user}</p>
+        </Link>
       </div>
 
-      <h1 className=" font-rubik font-thin break-normal text-sm sm:text-base">
-        {body}
-      </h1>
+      <h1 className="font-thin break-normal text-sm sm:text-base">{body}</h1>
       <div className="flex justify-between">
         <Votes
           Upvoted={upvoted}
@@ -38,12 +37,12 @@ const Post: React.FC<props> = ({
           Votes={votes}
           postId={postId}
         ></Votes>
-        <div className="font-rubik font-thin flex text-xs">
-          <h1 className=" hover:underline ">pin</h1>
-          <h1 className=" hover:underline pl-7 flex">join discussion</h1>
-          <div className="bg-black rounded-full h-4 ml-1 text-white text-xs ">
-            32
-          </div>
+        <div className="flex ">
+          <p className=" hover:underline ">pin</p>
+          <Link href={`/post/${postId}`}>
+            <p className=" hover:underline pl-7 flex">join discussion</p>
+          </Link>
+          <p className="bg-black rounded-full h-4 ml-1 text-white ">32</p>
         </div>
       </div>
     </div>

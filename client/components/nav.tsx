@@ -46,7 +46,7 @@ const Nav: React.FC<props> = (props) => {
   return (
     <div className="h-screen w-screen bg-white" {...props}>
       <div className="bg-gray-200 h-screen w-screen sm:w-3/4 sm:m-auto  overflow-y-auto">
-        <h1 className="sm:tracking-smExtreme tracking-midExtreme font-rubik font-extrabold text-3xl text-center border-white border-b-2 p-1">
+        <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-white border-b-2 p-1">
           Textor
         </h1>
         {!isMobile ? (

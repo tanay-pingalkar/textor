@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from "typeorm";
+import { Comments } from "./comment";
 import { Downvotes } from "./downvote";
 import { Posts } from "./post";
 import { Upvotes } from "./upvote";
@@ -42,6 +43,10 @@ export class Users extends BaseEntity {
   @Field(() => [Posts])
   @OneToMany(() => Posts, (post) => post.user)
   posts: Posts[];
+
+  @Field(() => [Comments])
+  @OneToMany(() => Posts, (comments) => comments.user)
+  comments: Comments[];
 
   @Field(() => [Upvotes])
   @OneToMany(() => Upvotes, (upvote) => upvote.user)

@@ -14,6 +14,21 @@ export type Scalars = {
   Float: number;
 };
 
+export type Comments = {
+  __typename?: 'Comments';
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  body: Scalars['String'];
+  user: Users;
+  upvotes: Array<Upvotes>;
+  downvotes: Array<Downvotes>;
+  totalVotes: Scalars['Float'];
+  post: Posts;
+  children: Array<Scalars['Float']>;
+  parent?: Maybe<Scalars['Float']>;
+};
+
 export enum DownvoteAction {
   Downvote = 'DOWNVOTE',
   Undownvote = 'UNDOWNVOTE'
@@ -35,6 +50,7 @@ export type Mutation = {
   post: PostResponse;
   upvote: UpvoteResponse;
   downvote: DownvoteResponse;
+  comment: CommentResponse;
 };
 
 
@@ -57,6 +73,11 @@ export type MutationDownvoteArgs = {
   postId: Scalars['String'];
 };
 
+
+export type MutationCommentArgs = {
+  commentInfo: CommentInput;
+};
+
 export type Posts = {
   __typename?: 'Posts';
   id: Scalars['ID'];
@@ -68,6 +89,9 @@ export type Posts = {
   upvotes: Array<Upvotes>;
   downvotes: Array<Downvotes>;
   totalVotes: Scalars['Float'];
+  comment: Array<Comments>;
+  upvoted: Scalars['Boolean'];
+  downvoted: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -76,7 +100,9 @@ export type Query = {
   login: RegisterResponse;
   auth: AuthResponse;
   profile: ProfileResponse;
-  feed: Array<FeedResponse>;
+  feed: Array<Posts>;
+  getPost: Posts;
+  thread: Array<Comments>;
 };
 
 
@@ -92,6 +118,16 @@ export type QueryProfileArgs = {
 
 export type QueryFeedArgs = {
   lastPostId?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetPostArgs = {
+  postId: Scalars['Float'];
+};
+
+
+export type QueryThreadArgs = {
+  postId: Scalars['Float'];
 };
 
 export enum UpvoteAction {
@@ -117,6 +153,7 @@ export type Users = {
   name: Scalars['String'];
   password: Scalars['String'];
   posts: Array<Posts>;
+  comments: Array<Comments>;
   upvotes: Array<Upvotes>;
   downvotes: Array<Downvotes>;
 };
@@ -127,17 +164,22 @@ export type AuthResponse = {
   user?: Maybe<Users>;
 };
 
+export type CommentInput = {
+  body: Scalars['String'];
+  commentId?: Maybe<Scalars['String']>;
+  postId: Scalars['String'];
+};
+
+export type CommentResponse = {
+  __typename?: 'commentResponse';
+  msg: Scalars['String'];
+  comment?: Maybe<Comments>;
+};
+
 export type DownvoteResponse = {
   __typename?: 'downvoteResponse';
   msg: Scalars['String'];
   action?: Maybe<DownvoteAction>;
-};
-
-export type FeedResponse = {
-  __typename?: 'feedResponse';
-  upvoted: Scalars['Boolean'];
-  downvoted: Scalars['Boolean'];
-  post: Posts;
 };
 
 export type LoginInput = {
@@ -161,7 +203,6 @@ export type ProfileResponse = {
   msg: Scalars['String'];
   me?: Maybe<Scalars['Boolean']>;
   user?: Maybe<Users>;
-  posts?: Maybe<Array<FeedResponse>>;
 };
 
 export type RegisterInput = {
@@ -276,15 +317,11 @@ export type FeedQueryVariables = Exact<{
 export type FeedQuery = (
   { __typename?: 'Query' }
   & { feed: Array<(
-    { __typename?: 'feedResponse' }
-    & Pick<FeedResponse, 'upvoted' | 'downvoted'>
-    & { post: (
-      { __typename?: 'Posts' }
-      & Pick<Posts, 'id' | 'title' | 'body' | 'totalVotes'>
-      & { user: (
-        { __typename?: 'Users' }
-        & Pick<Users, 'name'>
-      ) }
+    { __typename?: 'Posts' }
+    & Pick<Posts, 'id' | 'title' | 'body' | 'upvoted' | 'downvoted' | 'totalVotes'>
+    & { user: (
+      { __typename?: 'Users' }
+      & Pick<Users, 'name'>
     ) }
   )> }
 );
@@ -320,18 +357,15 @@ export type ProfileQuery = (
   { __typename?: 'Query' }
   & { profile: (
     { __typename?: 'profileResponse' }
-    & Pick<ProfileResponse, 'msg'>
+    & Pick<ProfileResponse, 'msg' | 'me'>
     & { user?: Maybe<(
       { __typename?: 'Users' }
       & Pick<Users, 'name' | 'email'>
-    )>, posts?: Maybe<Array<(
-      { __typename?: 'feedResponse' }
-      & Pick<FeedResponse, 'upvoted' | 'downvoted'>
-      & { post: (
+      & { posts: Array<(
         { __typename?: 'Posts' }
-        & Pick<Posts, 'id' | 'title' | 'body' | 'totalVotes'>
-      ) }
-    )>> }
+        & Pick<Posts, 'upvoted' | 'downvoted' | 'id' | 'title' | 'body' | 'totalVotes'>
+      )> }
+    )> }
   ) }
 );
 
@@ -393,16 +427,14 @@ export const AuthDocument = gql`
 export const FeedDocument = gql`
     query feed($lastPostId: String) {
   feed(lastPostId: $lastPostId) {
+    id
+    title
+    body
     upvoted
     downvoted
-    post {
-      id
-      title
-      body
-      totalVotes
-      user {
-        name
-      }
+    totalVotes
+    user {
+      name
     }
   }
 }
@@ -423,14 +455,13 @@ export const ProfileDocument = gql`
     query profile($username: String!) {
   profile(username: $username) {
     msg
+    me
     user {
       name
       email
-    }
-    posts {
-      upvoted
-      downvoted
-      post {
+      posts {
+        upvoted
+        downvoted
         id
         title
         body

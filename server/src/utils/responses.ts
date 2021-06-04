@@ -2,6 +2,7 @@ import { Posts } from "../entities/post";
 import { ObjectType, Field } from "type-graphql";
 import { Users } from "../entities/user";
 import { registerEnumType } from "type-graphql";
+import { Comments } from "../entities/comment";
 
 @ObjectType()
 export class registerResponse {
@@ -25,6 +26,15 @@ export class postResponse {
 
   @Field(() => Posts, { nullable: true })
   post?: Posts;
+}
+
+@ObjectType()
+export class commentResponse {
+  @Field(() => String)
+  msg?: string;
+
+  @Field(() => Comments, { nullable: true })
+  comment?: Comments;
 }
 
 export enum UpvoteAction {
@@ -64,18 +74,6 @@ export class downvoteResponse {
 }
 
 @ObjectType()
-export class feedResponse {
-  @Field(() => Boolean)
-  upvoted: boolean;
-
-  @Field(() => Boolean)
-  downvoted: boolean;
-
-  @Field(() => Posts)
-  post: Posts;
-}
-
-@ObjectType()
 export class profileResponse {
   @Field(() => String)
   msg: string;
@@ -85,7 +83,4 @@ export class profileResponse {
 
   @Field(() => Users, { nullable: true })
   user?: Users;
-
-  @Field(() => [feedResponse], { nullable: true })
-  posts?: feedResponse[];
 }

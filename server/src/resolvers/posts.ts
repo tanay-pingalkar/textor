@@ -1,12 +1,11 @@
 import { Posts } from "../entities/post";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { postInput } from "../utils/inputs";
-import { feedResponse, postResponse } from "../utils/responses";
+import { postResponse } from "../utils/responses";
 import { Users } from "../entities/user";
-import { Upvotes } from "../entities/upvote";
-import { Downvotes } from "../entities/downvote";
 import { decodedToken, MyContext } from "src/utils/types";
 import jwt from "jsonwebtoken";
+import { Comments } from "../entities/comment";
 
 @Resolver()
 export class posts {
@@ -81,11 +80,11 @@ export class posts {
     }
   }
 
-  @Query(() => [feedResponse])
+  @Query(() => [Posts])
   async feed(
     @Ctx() { req }: MyContext,
     @Arg("lastPostId", { nullable: true }) lastPostId?: string
-  ): Promise<feedResponse[]> {
+  ): Promise<Posts[]> {
     let userId;
     if (req.cookies.token) {
       const obj = jwt.verify(
@@ -94,8 +93,6 @@ export class posts {
       ) as decodedToken;
       userId = obj.user_id;
     }
-
-    const feedRes: feedResponse[] = [];
     try {
       let posts: Posts[];
       if (lastPostId) {
@@ -127,52 +124,33 @@ export class posts {
           .orderBy("Posts.id", "DESC")
           .getMany();
       }
-
-      for (const post of posts) {
-        if (userId) {
-          const isUpvoted = await Upvotes.createQueryBuilder()
-            .where("Upvotes.userId = :userId", { userId: userId })
-            .andWhere("Upvotes.postId = :postId", { postId: post.id })
-            .getOne();
-
-          if (isUpvoted) {
-            feedRes.push({
-              upvoted: true,
-              downvoted: false,
-              post: post,
-            });
-          } else {
-            const isDownvoted = await Downvotes.createQueryBuilder()
-              .where("Downvotes.userId = :userId", { userId: userId })
-              .andWhere("Downvotes.postId = :postId", { postId: post.id })
-              .getOne();
-
-            if (isDownvoted) {
-              feedRes.push({
-                upvoted: false,
-                downvoted: true,
-                post: post,
-              });
-            } else {
-              feedRes.push({
-                upvoted: false,
-                downvoted: false,
-                post: post,
-              });
-            }
-          }
-        } else {
-          feedRes.push({
-            upvoted: false,
-            downvoted: false,
-            post: post,
-          });
+      if (userId) {
+        for (const post of posts) {
+          await post.isUpvoted(userId);
+          await post.isDownvoted(userId);
         }
       }
-      return feedRes;
+      return posts;
     } catch (error) {
       console.log(error);
       return [];
     }
+  }
+
+  @Query(() => Posts)
+  async getPost(@Arg("postId") postId: number): Promise<Posts> {
+    const post = await Posts.findOne(postId);
+    post.comment = await Comments.createQueryBuilder()
+      .leftJoinAndMapOne(
+        "Comments.post",
+        "posts",
+        "p",
+        "p.id = Comments.postId"
+      )
+      .loadRelationIdAndMap("children", "Comments.children")
+      .loadRelationIdAndMap("parent", "Comments.parent")
+      .where("p.id = :postId", { postId: postId })
+      .getMany();
+    return post;
   }
 }

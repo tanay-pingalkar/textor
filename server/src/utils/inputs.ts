@@ -29,3 +29,15 @@ export class postInput {
   @Field(() => String)
   body: string;
 }
+
+@InputType()
+export class commentInput {
+  @Field(() => String)
+  body: string;
+
+  @Field(() => String, { nullable: true })
+  commentId: string;
+
+  @Field(() => String)
+  postId: string;
+}

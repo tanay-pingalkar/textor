@@ -150,61 +150,24 @@ export class users {
         where: { name: username },
         relations: ["posts"],
       });
-      const feedRes: feedResponse[] = [];
       if (user) {
         for (const post of user.posts) {
-          if (user.id) {
-            const isUpvoted = await Upvotes.createQueryBuilder()
-              .where("Upvotes.userId = :userId", { userId: user.id })
-              .andWhere("Upvotes.postId = :postId", { postId: post.id })
-              .getOne();
-
-            if (isUpvoted) {
-              feedRes.push({
-                upvoted: true,
-                downvoted: false,
-                post: post,
-              });
-            } else {
-              const isDownvoted = await Downvotes.createQueryBuilder()
-                .where("Downvotes.userId = :userId", { userId: user.id })
-                .andWhere("Downvotes.postId = :postId", { postId: post.id })
-                .getOne();
-
-              if (isDownvoted) {
-                feedRes.push({
-                  upvoted: false,
-                  downvoted: true,
-                  post: post,
-                });
-              } else {
-                feedRes.push({
-                  upvoted: false,
-                  downvoted: false,
-                  post: post,
-                });
-              }
-            }
-          } else {
-            feedRes.push({
-              upvoted: false,
-              downvoted: false,
-              post: post,
-            });
-          }
+          await post.isUpvoted(user.id);
+          await post.isDownvoted(user.id);
         }
+
         return {
           msg: "great",
           user: user,
           me: user.id === requestUserId,
-          posts: feedRes,
         };
       } else {
         return {
           msg: "user not found",
         };
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         msg: "error while finding user",
       };

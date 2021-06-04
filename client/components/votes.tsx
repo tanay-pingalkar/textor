@@ -70,7 +70,7 @@ const Votes: React.FC<props> = ({ Upvoted, Downvoted, Votes, postId }) => {
         <span className="mt-1" onClick={upvote}>
           {upvoted ? <Voted></Voted> : <Vote></Vote>}
         </span>
-        <h1 className="font-rubik px-1">{votes}</h1>
+        <h1 className="px-1">{votes}</h1>
         <span className="transform rotate-180 mb-1">
           <span className="mt-1" onClick={downvote}>
             {downvoted ? <Voted></Voted> : <Vote></Vote>}

@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
+import { Comments } from "./comment";
 import { Downvotes } from "./downvote";
 import { Upvotes } from "./upvote";
 import { Users } from "./user";
@@ -51,4 +52,32 @@ export class Posts extends BaseEntity {
   @Field()
   @Column({ nullable: false, type: "float", default: 0.0 })
   totalVotes: number;
+
+  @Field(() => [Comments])
+  @OneToMany(() => Comments, (comment) => comment.post)
+  comment: Comments[];
+
+  async isUpvoted(userId: number): Promise<boolean> {
+    const upvote = await Upvotes.createQueryBuilder()
+      .where("Upvotes.userId = :userId", { userId: userId })
+      .andWhere("Upvotes.postId = :postId", { postId: this.id })
+      .getOne();
+    this.upvoted = !!upvote;
+    return !!upvote;
+  }
+
+  async isDownvoted(userId: number): Promise<boolean> {
+    const downvote = await Downvotes.createQueryBuilder()
+      .where("Downvotes.userId = :userId", { userId: userId })
+      .andWhere("Downvotes.postId = :postId", { postId: this.id })
+      .getOne();
+    this.downvoted = !!downvote;
+    return !!downvote;
+  }
+
+  @Field(() => Boolean)
+  upvoted = false;
+
+  @Field(() => Boolean)
+  downvoted = false;
 }
