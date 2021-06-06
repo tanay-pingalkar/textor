@@ -1,29 +1,14 @@
 import { GetServerSideProps } from "next";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { sdk } from "../client";
 import Post from "../components/post";
-import { Ctx } from "../context";
-import { FeedResponse } from "../generated/graphql";
+import { Posts } from "../generated/graphql";
 
 interface props {
-  feed: FeedResponse[];
+  feed: Posts[];
 }
 const Home: React.FC<props> = ({ feed }) => {
-  const [posts, setPosts] = useState<FeedResponse[]>(feed);
-  const { auth, setAuth, setName } = useContext(Ctx);
-
-  useEffect(() => {
-    if (!auth) {
-      (async () => {
-        const { auth } = await sdk.auth();
-
-        if (auth.msg === "great" && auth.user) {
-          setAuth(true);
-          setName(auth.user.name);
-        }
-      })();
-    }
-  }, []);
+  const [posts, setPosts] = useState<Posts[]>(feed);
 
   return (
     <div>
@@ -45,7 +30,7 @@ const Home: React.FC<props> = ({ feed }) => {
           const { feed } = await sdk.feed({
             lastPostId: posts[posts.length - 1].id,
           });
-          setPosts(posts.concat(feed as FeedResponse[]));
+          setPosts(posts.concat(feed as Posts[]));
         }}
       >
         more

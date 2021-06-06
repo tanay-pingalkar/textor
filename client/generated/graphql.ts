@@ -21,12 +21,14 @@ export type Comments = {
   updatedAt: Scalars['String'];
   body: Scalars['String'];
   user: Users;
-  upvotes: Array<Upvotes>;
-  downvotes: Array<Downvotes>;
+  upvotes: Array<UpvotesComments>;
+  downvotes: Array<DownvotesComments>;
   totalVotes: Scalars['Float'];
   post: Posts;
   children: Array<Scalars['Float']>;
   parent?: Maybe<Scalars['Float']>;
+  upvoted: Scalars['Boolean'];
+  downvoted: Scalars['Boolean'];
 };
 
 export enum DownvoteAction {
@@ -41,6 +43,15 @@ export type Downvotes = {
   updatedAt: Scalars['String'];
   user: Users;
   post: Posts;
+};
+
+export type DownvotesComments = {
+  __typename?: 'DownvotesComments';
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  user: Users;
+  post: Comments;
 };
 
 export type Mutation = {
@@ -144,6 +155,15 @@ export type Upvotes = {
   post: Posts;
 };
 
+export type UpvotesComments = {
+  __typename?: 'UpvotesComments';
+  id: Scalars['ID'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  user: Users;
+  post: Posts;
+};
+
 export type Users = {
   __typename?: 'Users';
   id: Scalars['ID'];
@@ -156,6 +176,8 @@ export type Users = {
   comments: Array<Comments>;
   upvotes: Array<Upvotes>;
   downvotes: Array<Downvotes>;
+  upvotesComments: Array<UpvotesComments>;
+  downvotesComments: Array<Downvotes>;
 };
 
 export type AuthResponse = {
@@ -326,6 +348,26 @@ export type FeedQuery = (
   )> }
 );
 
+export type GetPostQueryVariables = Exact<{
+  postId: Scalars['Float'];
+}>;
+
+
+export type GetPostQuery = (
+  { __typename?: 'Query' }
+  & { getPost: (
+    { __typename?: 'Posts' }
+    & Pick<Posts, 'title' | 'body' | 'id' | 'upvoted' | 'downvoted' | 'totalVotes'>
+    & { user: (
+      { __typename?: 'Users' }
+      & Pick<Users, 'name'>
+    ), comment: Array<(
+      { __typename?: 'Comments' }
+      & Pick<Comments, 'id' | 'body' | 'children' | 'parent'>
+    )> }
+  ) }
+);
+
 export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -439,6 +481,27 @@ export const FeedDocument = gql`
   }
 }
     `;
+export const GetPostDocument = gql`
+    query getPost($postId: Float!) {
+  getPost(postId: $postId) {
+    title
+    body
+    id
+    upvoted
+    downvoted
+    totalVotes
+    user {
+      name
+    }
+    comment {
+      id
+      body
+      children
+      parent
+    }
+  }
+}
+    `;
 export const HelloDocument = gql`
     query hello {
   hello
@@ -499,6 +562,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     feed(variables?: FeedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FeedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FeedQuery>(FeedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'feed');
+    },
+    getPost(variables: GetPostQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetPostQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPostQuery>(GetPostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPost');
     },
     hello(variables?: HelloQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<HelloQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<HelloQuery>(HelloDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'hello');

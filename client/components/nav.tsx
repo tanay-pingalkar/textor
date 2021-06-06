@@ -4,13 +4,14 @@ import { Ctx } from "../context";
 import MainNav from "./desktopNav";
 import { useRouter } from "next/router";
 import MobileNav from "./mobileNav";
+import { sdk } from "../client";
 
 type props = JSX.IntrinsicAttributes &
   React.ClassAttributes<HTMLDivElement> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const Nav: React.FC<props> = (props) => {
-  const { auth } = useContext(Ctx);
+  const { auth, setAuth, setName } = useContext(Ctx);
   const [isMobile, setIsMobile] = useState(false);
   const query = useMediaQuery({ query: "(max-width: 545px)" });
   const router = useRouter();
@@ -19,6 +20,19 @@ const Nav: React.FC<props> = (props) => {
   useEffect(() => {
     setIsMobile(query);
   }, [query]);
+
+  useEffect(() => {
+    if (!auth) {
+      (async () => {
+        const { auth } = await sdk.auth();
+        console.log(auth);
+        if (auth.msg === "great" && auth.user) {
+          setAuth(true);
+          setName(auth.user.name);
+        }
+      })();
+    }
+  }, [auth]);
   switch (router.pathname) {
     case "/":
       where = "Feed";
@@ -29,14 +43,13 @@ const Nav: React.FC<props> = (props) => {
     case "/register":
       where = "Register";
       break;
-    case "/post":
-      where = "Post";
-      break;
     default:
       if (router.pathname.includes("profile")) {
         where = "Profile";
       } else if (router.pathname.includes("search")) {
         where = "Search";
+      } else if (router.pathname.includes("post")) {
+        where = "Post";
       } else {
         where = "Hmm";
       }

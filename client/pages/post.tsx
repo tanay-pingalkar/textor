@@ -1,30 +1,12 @@
 import { useRouter } from "next/router";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { sdk } from "../client";
-import { Ctx } from "../context";
 
 export default function Post(): JSX.Element {
-  const { auth, setAuth, setName } = useContext(Ctx);
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!auth) {
-      (async () => {
-        const { auth } = await sdk.auth();
-
-        if (auth.msg === "great" && auth.user) {
-          setAuth(true);
-          setName(auth.user.name);
-        } else {
-          alert("login please");
-          router.push("/login");
-        }
-      })();
-    }
-  }, [auth]);
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

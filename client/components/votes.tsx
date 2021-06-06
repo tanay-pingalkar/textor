@@ -66,7 +66,7 @@ const Votes: React.FC<props> = ({ Upvoted, Downvoted, Votes, postId }) => {
   };
   return (
     <div>
-      <div className="inline-flex px-3 bg-white rounded-full">
+      <div className="inline-flex px-3   bg-white rounded-full">
         <span className="mt-1" onClick={upvote}>
           {upvoted ? <Voted></Voted> : <Vote></Vote>}
         </span>

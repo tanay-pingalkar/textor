@@ -11,7 +11,7 @@ import {
 import { Comments } from "./comment";
 import { Downvotes } from "./downvote";
 import { Posts } from "./post";
-import { Upvotes } from "./upvote";
+import { Upvotes, UpvotesComments } from "./upvote";
 
 @Entity()
 @ObjectType()
@@ -55,4 +55,12 @@ export class Users extends BaseEntity {
   @Field(() => [Downvotes])
   @OneToMany(() => Downvotes, (downvote) => downvote.user)
   downvotes: Downvotes[];
+
+  @Field(() => [UpvotesComments])
+  @OneToMany(() => UpvotesComments, (upvotesComment) => upvotesComment.user)
+  upvotesComments: UpvotesComments[];
+
+  @Field(() => [Downvotes])
+  @OneToMany(() => Downvotes, (downvotesComment) => downvotesComment.user)
+  downvotesComments: Downvotes[];
 }

@@ -1,33 +1,9 @@
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
 import { sdk } from "../../client";
-import { Ctx } from "../../context";
 import { ProfileResponse } from "../../generated/graphql";
 import Post from "../../components/post";
 
 const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
-  const { auth, setAuth, setName } = useContext(Ctx);
-
-  const router = useRouter();
-  console.log(msg);
-
-  useEffect(() => {
-    if (msg === "no user id provide, login please") {
-      alert(msg);
-      router.push("/login");
-    } else if (!auth) {
-      (async () => {
-        const { auth } = await sdk.auth();
-
-        if (auth.msg === "great" && auth.user) {
-          setAuth(true);
-          setName(auth.user.name);
-        }
-      })();
-    }
-  }, [auth]);
-
   return (
     <div>
       {msg === "great" ? (

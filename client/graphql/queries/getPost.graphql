@@ -1,0 +1,19 @@
+query getPost($postId: Float!) {
+  getPost(postId: $postId) {
+    title
+    body
+    id
+    upvoted
+    downvoted
+    totalVotes
+    user {
+      name
+    }
+    comment {
+      id
+      body
+      children
+      parent
+    }
+  }
+}

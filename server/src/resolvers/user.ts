@@ -1,7 +1,6 @@
 import { loginInput, registerInput } from "../utils/inputs";
 import {
   authResponse,
-  feedResponse,
   profileResponse,
   registerResponse,
 } from "../utils/responses";
@@ -12,8 +11,6 @@ import { Users } from "../entities/user";
 import { jwtgen } from "../utils/jwtgen";
 import jwt from "jsonwebtoken";
 import { decodedToken, MyContext } from "src/utils/types";
-import { Upvotes } from "../entities/upvote";
-import { Downvotes } from "../entities/downvote";
 
 @Resolver()
 export class users {

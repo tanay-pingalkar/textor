@@ -9,9 +9,11 @@
     "gen": "graphql-codegen --require dotenv/config --config codegen.yml"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.170",
     "dotenv": "^10.0.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
+    "lodash": "^4.17.21",
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

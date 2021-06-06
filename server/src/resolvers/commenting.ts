@@ -7,7 +7,7 @@ import { Comments } from "../entities/comment";
 import { decodedToken, MyContext } from "../utils/types";
 import jwt from "jsonwebtoken";
 import { getManager } from "typeorm";
-import _ from "lodash";
+// import _ from "lodash";
 
 @Resolver()
 export class commenting {
@@ -93,27 +93,27 @@ export class commenting {
       .loadRelationIdAndMap("parent", "Comments.parent")
       .where("p.id = :postId", { postId: postId })
       .getMany();
-    console.log(ancestor);
+
     return ancestor;
   }
 }
 
-function Btree(arr: any) {
-  const mapChildren = (childId) => {
-    const tag = _.find(arr, (ar) => ar.id === childId) || null;
-    if (_.isArray(tag.children) && tag.children.length > 0) {
-      tag.children = tag.children
-        .map(mapChildren)
-        .filter((arr) => arr !== null);
-    }
-    return tag;
-  };
+// function Btree(arr: any) {
+//   const mapChildren = (childId) => {
+//     const tag = _.find(arr, (ar) => ar.id === childId) || null;
+//     if (_.isArray(tag.children) && tag.children.length > 0) {
+//       tag.children = tag.children
+//         .map(mapChildren)
+//         .filter((arr) => arr !== null);
+//     }
+//     return tag;
+//   };
 
-  const btree = arr
-    .filter((ar) => ar.parent === null)
-    .map((ele) => {
-      ele.children = ele.children.map(mapChildren);
-      return ele;
-    });
-  return btree;
-}
+//   const btree = arr
+//     .filter((ar) => ar.parent === null)
+//     .map((ele) => {
+//       ele.children = ele.children.map(mapChildren);
+//       return ele;
+//     });
+//   return btree;
+// }

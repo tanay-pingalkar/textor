@@ -138,8 +138,12 @@ export class posts {
   }
 
   @Query(() => Posts)
-  async getPost(@Arg("postId") postId: number): Promise<Posts> {
-    const post = await Posts.findOne(postId);
+  async getPost(
+    @Arg("postId") postId: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Posts> {
+    const post = await Posts.findOne(postId, { relations: ["user"] });
+
     post.comment = await Comments.createQueryBuilder()
       .leftJoinAndMapOne(
         "Comments.post",
@@ -151,6 +155,18 @@ export class posts {
       .loadRelationIdAndMap("parent", "Comments.parent")
       .where("p.id = :postId", { postId: postId })
       .getMany();
+    let userId;
+
+    if (req.cookies.token) {
+      const obj = jwt.verify(
+        req.cookies.token,
+        process.env.JWT_SECRET
+      ) as decodedToken;
+      userId = obj.user_id;
+      await post.isDownvoted(userId);
+      await post.isUpvoted(userId);
+    }
+
     return post;
   }
 }

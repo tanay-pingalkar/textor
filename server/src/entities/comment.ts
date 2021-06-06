@@ -12,9 +12,9 @@ import {
   TreeChildren,
   TreeParent,
 } from "typeorm";
-import { Downvotes } from "./downvote";
+import { DownvotesComments } from "./downvote";
 import { Posts } from "./post";
-import { Upvotes } from "./upvote";
+import { UpvotesComments } from "./upvote";
 import { Users } from "./user";
 
 @Entity()
@@ -41,13 +41,13 @@ export class Comments extends BaseEntity {
   @ManyToOne(() => Users, (user) => user.comments)
   user: Users;
 
-  @Field(() => [Upvotes])
-  @OneToMany(() => Upvotes, (upvote) => upvote.post)
-  upvotes: Upvotes[];
+  @Field(() => [UpvotesComments])
+  @OneToMany(() => UpvotesComments, (upvotesComment) => upvotesComment.post)
+  upvotes: UpvotesComments[];
 
-  @Field(() => [Downvotes])
-  @OneToMany(() => Downvotes, (downvote) => downvote.post)
-  downvotes: Downvotes[];
+  @Field(() => [DownvotesComments])
+  @OneToMany(() => DownvotesComments, (downvoteComment) => downvoteComment.post)
+  downvotes: DownvotesComments[];
 
   @Field()
   @Column({ nullable: false, type: "float", default: 0.0 })
@@ -64,4 +64,28 @@ export class Comments extends BaseEntity {
   @Field(() => Number, { nullable: true })
   @TreeParent()
   parent: Comments;
+
+  async isUpvoted(userId: number): Promise<boolean> {
+    const upvote = await UpvotesComments.createQueryBuilder()
+      .where("Upvotes.userId = :userId", { userId: userId })
+      .andWhere("Upvotes.postId = :postId", { postId: this.id })
+      .getOne();
+    this.upvoted = !!upvote;
+    return !!upvote;
+  }
+
+  async isDownvoted(userId: number): Promise<boolean> {
+    const downvote = await DownvotesComments.createQueryBuilder()
+      .where("Downvotes.userId = :userId", { userId: userId })
+      .andWhere("Downvotes.postId = :postId", { postId: this.id })
+      .getOne();
+    this.downvoted = !!downvote;
+    return !!downvote;
+  }
+
+  @Field(() => Boolean)
+  upvoted = false;
+
+  @Field(() => Boolean)
+  downvoted = false;
 }
