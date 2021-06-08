@@ -12,6 +12,9 @@ query getPost($postId: Float!) {
     comment {
       id
       body
+      user {
+        name
+      }
       children
       parent
     }

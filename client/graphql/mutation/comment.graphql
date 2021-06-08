@@ -1,0 +1,16 @@
+mutation comment($postId: String!, $body: String!, $commentId: String) {
+  comment(
+    commentInfo: { postId: $postId, body: $body, commentId: $commentId }
+  ) {
+    msg
+    comment {
+      id
+      body
+      parent
+      children
+      user {
+        name
+      }
+    }
+  }
+}

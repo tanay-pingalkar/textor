@@ -24,11 +24,15 @@ const Nav: React.FC<props> = (props) => {
   useEffect(() => {
     if (!auth) {
       (async () => {
-        const { auth } = await sdk.auth();
-        console.log(auth);
-        if (auth.msg === "great" && auth.user) {
-          setAuth(true);
-          setName(auth.user.name);
+        try {
+          const { auth } = await sdk.auth();
+          console.log(auth);
+          if (auth.msg === "great" && auth.user) {
+            setAuth(true);
+            setName(auth.user.name);
+          }
+        } catch (error) {
+          router.push("Login");
         }
       })();
     }
@@ -49,7 +53,7 @@ const Nav: React.FC<props> = (props) => {
       } else if (router.pathname.includes("search")) {
         where = "Search";
       } else if (router.pathname.includes("post")) {
-        where = "Post";
+        where = "Post ";
       } else {
         where = "Hmm";
       }

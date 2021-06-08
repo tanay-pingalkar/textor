@@ -249,6 +249,29 @@ export type MsgAndTokenFragment = (
   & Pick<RegisterResponse, 'msg'>
 );
 
+export type CommentMutationVariables = Exact<{
+  postId: Scalars['String'];
+  body: Scalars['String'];
+  commentId?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CommentMutation = (
+  { __typename?: 'Mutation' }
+  & { comment: (
+    { __typename?: 'commentResponse' }
+    & Pick<CommentResponse, 'msg'>
+    & { comment?: Maybe<(
+      { __typename?: 'Comments' }
+      & Pick<Comments, 'id' | 'body' | 'parent' | 'children'>
+      & { user: (
+        { __typename?: 'Users' }
+        & Pick<Users, 'name'>
+      ) }
+    )> }
+  ) }
+);
+
 export type DownvoteMutationVariables = Exact<{
   postId: Scalars['String'];
 }>;
@@ -364,6 +387,10 @@ export type GetPostQuery = (
     ), comment: Array<(
       { __typename?: 'Comments' }
       & Pick<Comments, 'id' | 'body' | 'children' | 'parent'>
+      & { user: (
+        { __typename?: 'Users' }
+        & Pick<Users, 'name'>
+      ) }
     )> }
   ) }
 );
@@ -414,6 +441,22 @@ export type ProfileQuery = (
 export const MsgAndTokenFragmentDoc = gql`
     fragment msgAndToken on registerResponse {
   msg
+}
+    `;
+export const CommentDocument = gql`
+    mutation comment($postId: String!, $body: String!, $commentId: String) {
+  comment(commentInfo: {postId: $postId, body: $body, commentId: $commentId}) {
+    msg
+    comment {
+      id
+      body
+      parent
+      children
+      user {
+        name
+      }
+    }
+  }
 }
     `;
 export const DownvoteDocument = gql`
@@ -496,6 +539,9 @@ export const GetPostDocument = gql`
     comment {
       id
       body
+      user {
+        name
+      }
       children
       parent
     }
@@ -542,6 +588,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    comment(variables: CommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CommentMutation>(CommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'comment');
+    },
     downvote(variables: DownvoteMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DownvoteMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DownvoteMutation>(DownvoteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'downvote');
     },

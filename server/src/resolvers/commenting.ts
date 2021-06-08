@@ -17,6 +17,11 @@ export class commenting {
     @Ctx() { req }: MyContext
   ): Promise<commentResponse> {
     let userId;
+    if (body.length < 5) {
+      return {
+        msg: "body length should be less than 5",
+      };
+    }
     if (req.cookies.token) {
       const obj = jwt.verify(
         req.cookies.token,
@@ -57,9 +62,13 @@ export class commenting {
       new_comment.user = user;
       new_comment.post = post;
       new_comment.parent = comment;
-      comment.children = [...comment.children, new_comment];
+      new_comment.children = [];
+      comment.children.unshift(new_comment);
       await new_comment.save();
       await comment.save();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      new_comment.parent = comment.id;
       return {
         msg: "great",
         comment: new_comment,
@@ -70,6 +79,7 @@ export class commenting {
       });
       new_comment.user = user;
       new_comment.post = post;
+      new_comment.children = [];
       await new_comment.save();
       return {
         msg: "great",
@@ -97,23 +107,3 @@ export class commenting {
     return ancestor;
   }
 }
-
-// function Btree(arr: any) {
-//   const mapChildren = (childId) => {
-//     const tag = _.find(arr, (ar) => ar.id === childId) || null;
-//     if (_.isArray(tag.children) && tag.children.length > 0) {
-//       tag.children = tag.children
-//         .map(mapChildren)
-//         .filter((arr) => arr !== null);
-//     }
-//     return tag;
-//   };
-
-//   const btree = arr
-//     .filter((ar) => ar.parent === null)
-//     .map((ele) => {
-//       ele.children = ele.children.map(mapChildren);
-//       return ele;
-//     });
-//   return btree;
-// }

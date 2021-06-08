@@ -146,6 +146,12 @@ export class posts {
 
     post.comment = await Comments.createQueryBuilder()
       .leftJoinAndMapOne(
+        "Comments.user",
+        "users",
+        "u",
+        "u.id = Comments.userId"
+      )
+      .leftJoinAndMapOne(
         "Comments.post",
         "posts",
         "p",
