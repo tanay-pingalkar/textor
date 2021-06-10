@@ -1,14 +1,14 @@
 {
   "name": "textor",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server/dist/server.js",
   "author": "tanay-pingalkar <tpingalkar@gmail.com>",
   "license": "MIT",
   "scripts": {
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
-    "start":"cd server && npm start",
+    "start": "cd server && npm start",
     "postinstall": "cd server && npm install"
   },
   "devDependencies": {
