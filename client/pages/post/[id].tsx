@@ -8,6 +8,7 @@ import { Ctree, Ptree } from "../../utils/types";
 import Comment from "../../components/comment";
 import { Ctx } from "../../context";
 import { useRouter } from "next/router";
+import { Comments } from "../../generated/graphql";
 
 interface props {
   post: Ptree;
@@ -97,7 +98,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     { postId: postId },
     req.headers as HeadersInit
   );
-  getPost.comment = Btree(getPost.comment);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  getPost.comment = Btree(getPost.comment as Comments[]) as Ctree;
   return {
     props: {
       post: getPost,
