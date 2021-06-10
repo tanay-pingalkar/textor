@@ -1,1 +1,1 @@
-web: cd server && npx ts-node server/src/server.ts
+web: cd server && tsc && npm start
