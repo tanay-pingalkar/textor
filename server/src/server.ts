@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 5000;
   server.applyMiddleware({
     app,
     cors: {
-      origin: ["http://localhost:3000"],
+      origin: ["http://localhost:3000", "https://textor.vercel.app/"],
       credentials: true,
     },
   });
