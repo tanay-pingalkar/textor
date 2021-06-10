@@ -9,7 +9,7 @@
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
     "start": "cd server && npm start",
-    "postinstall": "cd server && npm install && tsc --nocheck"
+    "postinstall": "cd server && npm install && tsc --transpileOnly"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",
