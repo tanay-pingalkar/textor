@@ -8,7 +8,6 @@
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
-    "start": "cd server && npm start",
     "postinstall": "cd server && npm install && tsc"
   },
   "devDependencies": {
