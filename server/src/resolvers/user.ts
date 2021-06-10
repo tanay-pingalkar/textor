@@ -56,6 +56,7 @@ export class users {
         msg: "great",
       };
     } catch (error) {
+      console.log(error);
       return {
         msg: "user already exist",
       };

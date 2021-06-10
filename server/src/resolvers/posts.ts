@@ -39,7 +39,7 @@ export class posts {
       };
     }
 
-    if (title.length >= 25) {
+    if (title.length >= 35) {
       return {
         msg: "title should be less than 35",
       };
