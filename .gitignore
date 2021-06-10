@@ -9,3 +9,4 @@ server/yarn.lock
 node_modules
 yarn.lock
 server/.env
+client/.env

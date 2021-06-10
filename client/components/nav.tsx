@@ -41,7 +41,7 @@ const Nav: React.FC<props> = (props) => {
             setReputation(auth.user.reputation);
           }
         } catch (error) {
-          router.push("Login");
+          // router.push("/login");
         }
       })();
     }

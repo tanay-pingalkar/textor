@@ -8,6 +8,7 @@ mutation comment($postId: String!, $body: String!, $commentId: String) {
       body
       parent
       children
+      totalVotes
       user {
         name
       }
