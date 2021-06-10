@@ -5,11 +5,10 @@
   "author": "tanay-pingalkar <tpingalkar@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "heroku-prebuild": "npm install --only=dev",
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
-    "heroku-postbuild": "cd server && npm install && npm install --only=dev && npx tsc --noEmit"
+    "heroku-postbuild": "cd server && yarn && npx tsc"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",
