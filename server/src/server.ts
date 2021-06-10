@@ -7,6 +7,8 @@ import dotenv from "dotenv";
 import { MyContext } from "./utils/types";
 import cookieParser from "cookie-parser";
 import { AuthenticationError } from "apollo-server";
+import cors from "cors";
+
 dotenv.config();
 
 const app = express();
@@ -30,12 +32,15 @@ const PORT = process.env.PORT || 5000;
   });
   app.use(cookieParser());
   app.set("trust proxy", 1);
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN,
+      credentials: true,
+    })
+  );
   server.applyMiddleware({
     app,
-    cors: {
-      origin: ["http://localhost:3000", "https://textor.vercel.app/"],
-      credentials: true,
-    },
+    cors: false,
   });
   app.get("/", (_, res) => {
     res.send("great");
