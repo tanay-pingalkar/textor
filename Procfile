@@ -1,1 +1,2 @@
-web: cd server && npx tsc && npm start
+web: cd server && npx tsc && npm start 
+
