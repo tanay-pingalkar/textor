@@ -1,0 +1,5 @@
+mutation upvoteComment($commentId: String!) {
+  upvoteComment(commentId: $commentId) {
+    ...upvoteRes
+  }
+}

@@ -103,8 +103,14 @@ export class posts {
             "users",
             "users.id = Posts.userId"
           )
+          .leftJoinAndMapMany(
+            "Posts.comment",
+            "comments",
+            "c",
+            "c.postId= Posts.id"
+          )
           .where("Posts.id < :lastPostId", { lastPostId: Number(lastPostId) })
-          .andWhere("Posts.id >= :limit", { limit: Number(lastPostId) - 5 })
+          .andWhere("Posts.id >= :limit", { limit: Number(lastPostId) - 20 })
           .orderBy("Posts.id", "DESC")
           .getMany();
       } else {
@@ -117,9 +123,15 @@ export class posts {
             "users",
             "users.id = Posts.userId"
           )
+          .leftJoinAndMapMany(
+            "Posts.comment",
+            "comments",
+            "c",
+            "c.postId= Posts.id"
+          )
           .where("Posts.id <= :lastPostId", { lastPostId: Number(max) })
           .andWhere("Posts.id >= :limit", {
-            limit: Number(max) - 5,
+            limit: Number(max) - 20,
           })
           .orderBy("Posts.id", "DESC")
           .getMany();
@@ -161,6 +173,7 @@ export class posts {
       .loadRelationIdAndMap("parent", "Comments.parent")
       .where("p.id = :postId", { postId: postId })
       .getMany();
+
     let userId;
 
     if (req.cookies.token) {
@@ -169,8 +182,15 @@ export class posts {
         process.env.JWT_SECRET
       ) as decodedToken;
       userId = obj.user_id;
-      await post.isDownvoted(userId);
-      await post.isUpvoted(userId);
+
+      if (userId) {
+        await post.isDownvoted(userId);
+        await post.isUpvoted(userId);
+        for (const comment of post.comment) {
+          await comment.isDownvoted(userId);
+          await comment.isUpvoted(userId);
+        }
+      }
     }
 
     return post;

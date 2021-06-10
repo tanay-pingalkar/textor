@@ -5,4 +5,8 @@ export const Ctx = createContext<{
   setAuth?: Dispatch<SetStateAction<boolean>>;
   name?: string;
   setName?: Dispatch<SetStateAction<string>>;
+  reputation?: number;
+  setReputation?: Dispatch<SetStateAction<number>>;
+  dark?: boolean;
+  setDark?: Dispatch<SetStateAction<boolean>>;
 }>({});

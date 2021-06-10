@@ -1,17 +1,30 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useContext } from "react";
+import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { sdk } from "../client";
 import { Ctx } from "../context";
 
 const NavToggle: React.FC = () => {
-  const { auth, name } = useContext(Ctx);
-  const router = useRouter();
+  const { auth, name, setDark, dark, reputation, setAuth } = useContext(Ctx);
 
+  const toggleLights = () => {
+    setDark(!dark);
+    if (localStorage.getItem("dark") === "false") {
+      localStorage.setItem("dark", "true");
+    } else {
+      localStorage.setItem("dark", "false");
+    }
+  };
   return (
     <>
       {auth ? (
         <div className="flex ">
+          <DarkModeSwitch
+            size={15}
+            onChange={toggleLights}
+            checked={dark}
+            className="mt-3 mr-2"
+          />
           <Link href="/">
             <p className="mt-3 hover:underline">feed</p>
           </Link>
@@ -25,14 +38,14 @@ const NavToggle: React.FC = () => {
                 else "";
               })()} `}
             >
-              {name}
+              {name + `(${reputation})`}
             </p>
           </Link>
           <p
             className="mt-3 pl-2 hover:underline "
             onClick={async () => {
               await sdk.logout();
-              router.reload();
+              setAuth(false);
             }}
           >
             logout
@@ -40,6 +53,12 @@ const NavToggle: React.FC = () => {
         </div>
       ) : (
         <div className="flex ">
+          <DarkModeSwitch
+            size={15}
+            onChange={toggleLights}
+            checked={dark}
+            className="mt-3 mr-2"
+          />
           <Link href="/">
             <p className="mt-3 hover:underline">feed</p>
           </Link>

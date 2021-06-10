@@ -1,6 +1,5 @@
 mutation upvote($postId: String!) {
   upvote(postId: $postId) {
-    msg
-    action
+    ...upvoteRes
   }
 }

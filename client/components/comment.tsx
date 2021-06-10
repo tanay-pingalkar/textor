@@ -4,7 +4,6 @@ import { FormEvent, useContext, useState } from "react";
 import { sdk } from "../client";
 import { Ctx } from "../context";
 import { Ctree } from "../utils/types";
-import Post from "./post";
 import Votes from "./votes";
 
 const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
@@ -50,12 +49,19 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
         <Link href={`/profile/${comment.user.name}`}>
           <p className="hover:underline">comment by {comment.user.name}</p>
         </Link>
-        <h1 className=" break-normal text-sm mt-1 ">{comment.body}</h1>
+        <h1 className=" break-normal text-sm mt-1">{comment.body}</h1>
+        <span className="flex justify-between">
+          <Votes
+            Upvoted={comment.upvoted}
+            Votes={comment.totalVotes}
+            Downvoted={comment.downvoted}
+            commentId={comment.id}
+          />
+          <p className="hover:underline mb-1" onClick={() => setReply(!reply)}>
+            reply
+          </p>
+        </span>
 
-        <Votes Upvoted={false} Votes={23} Downvoted={false} />
-        <p className="hover:underline mb-1" onClick={() => setReply(!reply)}>
-          reply
-        </p>
         {reply ? (
           <form className="ml-5 " onSubmit={commentIt}>
             <h1>Add comment</h1>
@@ -74,7 +80,7 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
       </div>
 
       {comment.children.map((child) => (
-        <div className="ml-5 pt-1 border-white  border-l-2 ">
+        <div className="ml-5 border-white  border-l-2 ">
           <Comment comment={child} postId={postId} />
         </div>
       ))}

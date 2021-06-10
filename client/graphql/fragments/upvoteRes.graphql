@@ -1,0 +1,4 @@
+fragment upvoteRes on upvoteResponse {
+  msg
+  action
+}

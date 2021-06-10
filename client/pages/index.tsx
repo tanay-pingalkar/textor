@@ -22,13 +22,15 @@ const Home: React.FC<props> = ({ feed }) => {
           downvoted={post.downvoted}
           key={key}
           postId={post.id}
+          discussion={post.discussion}
         ></Post>
       ))}
       <button
         className="ml-5 mt-2 mb-2"
         onClick={async () => {
+          console.log(posts[posts.length - 1].id);
           const { feed } = await sdk.feed({
-            lastPostId: posts[posts.length - 1].id,
+            lastPostId: posts[posts.length - 1].id.toString(),
           });
           setPosts(posts.concat(feed as Posts[]));
         }}

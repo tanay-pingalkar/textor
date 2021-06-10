@@ -1,0 +1,4 @@
+fragment downvoteRes on downvoteResponse {
+  msg
+  action
+}

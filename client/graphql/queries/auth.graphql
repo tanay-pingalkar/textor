@@ -4,6 +4,7 @@ query auth {
     user {
       id
       name
+      reputation
     }
   }
 }

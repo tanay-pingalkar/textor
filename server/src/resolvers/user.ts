@@ -143,10 +143,12 @@ export class users {
     }
 
     try {
-      const user = await Users.findOne({
-        where: { name: username },
-        relations: ["posts"],
-      });
+      const user = await Users.createQueryBuilder()
+        .where("name = :username", { username: username })
+        .leftJoinAndMapMany("Users.posts", "posts", "p", "Users.id=p.userId")
+        .leftJoinAndMapMany("p.comment", "comments", "c", "c.postId=p.id")
+        .getOne();
+      console.log(user.posts);
       if (user) {
         for (const post of user.posts) {
           await post.isUpvoted(user.id);

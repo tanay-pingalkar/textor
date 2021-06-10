@@ -11,8 +11,16 @@ type props = JSX.IntrinsicAttributes &
   React.HTMLAttributes<HTMLDivElement>;
 
 const Nav: React.FC<props> = (props) => {
-  const { auth, setAuth, setName } = useContext(Ctx);
+  const { auth, setAuth, setName, dark, setDark, setReputation } =
+    useContext(Ctx);
   const [isMobile, setIsMobile] = useState(false);
+
+  if (typeof window != "undefined") {
+    const localDark = localStorage.getItem("dark");
+    if (localDark === "true") {
+      setDark(true);
+    }
+  }
   const query = useMediaQuery({ query: "(max-width: 545px)" });
   const router = useRouter();
   let where = "";
@@ -30,13 +38,14 @@ const Nav: React.FC<props> = (props) => {
           if (auth.msg === "great" && auth.user) {
             setAuth(true);
             setName(auth.user.name);
+            setReputation(auth.user.reputation);
           }
         } catch (error) {
           router.push("Login");
         }
       })();
     }
-  }, [auth]);
+  }, [auth, router]);
   switch (router.pathname) {
     case "/":
       where = "Feed";
@@ -60,18 +69,43 @@ const Nav: React.FC<props> = (props) => {
 
       break;
   }
+
   return (
-    <div className="h-screen w-screen bg-white" {...props}>
-      <div className="bg-gray-200 h-screen w-screen sm:w-3/4 sm:m-auto  overflow-y-auto">
-        <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-white border-b-2 p-1">
-          Textor
-        </h1>
-        {!isMobile ? (
-          <MainNav where={where} auth={auth}></MainNav>
-        ) : (
-          <MobileNav where={where}></MobileNav>
-        )}
-        {props.children}
+    <div className={`${dark ? "dark" : ""}`}>
+      <div
+        className="w-screen h-screen  bg-white dark:bg-gray-800 overflow-y-scroll "
+        {...props}
+      >
+        <div className="bg-gray-200 h-screen w-screen sm:w-3/4 sm:m-auto dark:bg-gray-700">
+          <div>
+            <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-white border-b-2 p-1">
+              Textor
+            </h1>
+
+            <div className="sticky top-0 z-500 shadow-md nav">
+              {!isMobile ? (
+                <MainNav where={where} auth={auth}></MainNav>
+              ) : (
+                <MobileNav where={where}></MobileNav>
+              )}
+            </div>
+            {props.children}
+          </div>
+          <div className="sticky px-5 border-t-2 flex  border-white py-1 justify-between top-full">
+            <a
+              className="font-light hover:underline dark:text-white"
+              href="https://github.com/tanay-pingalkar/textor"
+              rel="noreferrer"
+              target="_blank"
+            >
+              github
+            </a>
+            <img src="/logo.svg" className="w-6 h-6 "></img>
+            <a className="font-light hover:underline dark:text-white">
+              guideline
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

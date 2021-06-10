@@ -7,7 +7,6 @@ import { Comments } from "../entities/comment";
 import { decodedToken, MyContext } from "../utils/types";
 import jwt from "jsonwebtoken";
 import { getManager } from "typeorm";
-// import _ from "lodash";
 
 @Resolver()
 export class commenting {
@@ -103,7 +102,6 @@ export class commenting {
       .loadRelationIdAndMap("parent", "Comments.parent")
       .where("p.id = :postId", { postId: postId })
       .getMany();
-
     return ancestor;
   }
 }

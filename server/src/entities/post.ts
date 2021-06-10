@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int } from "type-graphql";
 import {
   Entity,
   Column,
@@ -73,6 +73,11 @@ export class Posts extends BaseEntity {
       .getOne();
     this.downvoted = !!downvote;
     return !!downvote;
+  }
+
+  @Field(() => Int)
+  get discussion(): number {
+    return this.comment.length;
   }
 
   @Field(() => Boolean)

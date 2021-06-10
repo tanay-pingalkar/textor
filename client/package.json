@@ -17,7 +17,8 @@
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-responsive": "^8.2.0"
+    "react-responsive": "^8.2.0",
+    "react-toggle-dark-mode": "^1.0.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.21.5",

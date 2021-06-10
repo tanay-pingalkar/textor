@@ -4,6 +4,7 @@ query profile($username: String!) {
     me
     user {
       name
+      reputation
       email
       posts {
         upvoted
@@ -12,6 +13,7 @@ query profile($username: String!) {
         title
         body
         totalVotes
+        discussion
       }
     }
   }

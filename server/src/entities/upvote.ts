@@ -56,5 +56,5 @@ export class UpvotesComments extends BaseEntity {
 
   @Field(() => Posts)
   @ManyToOne(() => Comments, (comment) => comment.upvotes)
-  post: Posts;
+  comment: Posts;
 }

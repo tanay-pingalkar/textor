@@ -9,6 +9,7 @@ interface props {
   upvoted: boolean;
   downvoted: boolean;
   postId: string;
+  discussion: number;
 }
 
 const Post: React.FC<props> = ({
@@ -19,6 +20,7 @@ const Post: React.FC<props> = ({
   upvoted,
   downvoted,
   postId,
+  discussion,
 }) => {
   return (
     <div className="px-5 pt-1 border-b-2 border-white ">
@@ -42,7 +44,9 @@ const Post: React.FC<props> = ({
           <Link href={`/post/${postId}`}>
             <p className=" hover:underline pl-7 flex">join discussion</p>
           </Link>
-          <p className="bg-black rounded-full h-4 ml-1 text-white ">32</p>
+          <span className="bg-black rounded-full px-1 ml-1 text-[10px] h-4 text-white ">
+            {discussion}
+          </span>
         </div>
       </div>
     </div>

@@ -14,7 +14,9 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
                 {user ? user.name : ""}
               </h1>
               <h1 className="text-sm">email : {user ? user.email : ""}</h1>
-              <h1 className="text-sm">points : 5</h1>
+              <h1 className="text-sm">
+                reputation : {user ? user.reputation : ""}
+              </h1>
             </div>
             {me ? <button className="h-6 mt-2">edit</button> : <></>}
           </div>
@@ -31,6 +33,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
               downvoted={post.downvoted}
               key={key}
               postId={post.id}
+              discussion={post.discussion}
             ></Post>
           ))}
         </>

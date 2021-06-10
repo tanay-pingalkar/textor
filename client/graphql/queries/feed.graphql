@@ -6,6 +6,7 @@ query feed($lastPostId: String) {
     upvoted
     downvoted
     totalVotes
+    discussion
     user {
       name
     }

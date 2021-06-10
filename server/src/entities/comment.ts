@@ -42,11 +42,14 @@ export class Comments extends BaseEntity {
   user: Users;
 
   @Field(() => [UpvotesComments])
-  @OneToMany(() => UpvotesComments, (upvotesComment) => upvotesComment.post)
+  @OneToMany(() => UpvotesComments, (upvotesComment) => upvotesComment.comment)
   upvotes: UpvotesComments[];
 
   @Field(() => [DownvotesComments])
-  @OneToMany(() => DownvotesComments, (downvoteComment) => downvoteComment.post)
+  @OneToMany(
+    () => DownvotesComments,
+    (downvoteComment) => downvoteComment.comment
+  )
   downvotes: DownvotesComments[];
 
   @Field()
@@ -67,8 +70,8 @@ export class Comments extends BaseEntity {
 
   async isUpvoted(userId: number): Promise<boolean> {
     const upvote = await UpvotesComments.createQueryBuilder()
-      .where("Upvotes.userId = :userId", { userId: userId })
-      .andWhere("Upvotes.postId = :postId", { postId: this.id })
+      .where("UpvotesComments.userId = :userId", { userId: userId })
+      .andWhere("UpvotesComments.commentId = :postId", { postId: this.id })
       .getOne();
     this.upvoted = !!upvote;
     return !!upvote;
@@ -76,8 +79,8 @@ export class Comments extends BaseEntity {
 
   async isDownvoted(userId: number): Promise<boolean> {
     const downvote = await DownvotesComments.createQueryBuilder()
-      .where("Downvotes.userId = :userId", { userId: userId })
-      .andWhere("Downvotes.postId = :postId", { postId: this.id })
+      .where("DownvotesComments.userId = :userId", { userId: userId })
+      .andWhere("DownvotesComments.commentId = :postId", { postId: this.id })
       .getOne();
     this.downvoted = !!downvote;
     return !!downvote;

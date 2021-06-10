@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int } from "type-graphql";
 import {
   Entity,
   Column,
@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Comments } from "./comment";
-import { Downvotes } from "./downvote";
+import { Downvotes, DownvotesComments } from "./downvote";
 import { Posts } from "./post";
 import { Upvotes, UpvotesComments } from "./upvote";
 
@@ -40,12 +40,16 @@ export class Users extends BaseEntity {
   @Column()
   password: string;
 
+  @Field(() => Int)
+  @Column({ type: "int", default: "0" })
+  reputation: number;
+
   @Field(() => [Posts])
   @OneToMany(() => Posts, (post) => post.user)
   posts: Posts[];
 
   @Field(() => [Comments])
-  @OneToMany(() => Posts, (comments) => comments.user)
+  @OneToMany(() => Comments, (comments) => comments.user)
   comments: Comments[];
 
   @Field(() => [Upvotes])
@@ -60,7 +64,10 @@ export class Users extends BaseEntity {
   @OneToMany(() => UpvotesComments, (upvotesComment) => upvotesComment.user)
   upvotesComments: UpvotesComments[];
 
-  @Field(() => [Downvotes])
-  @OneToMany(() => Downvotes, (downvotesComment) => downvotesComment.user)
-  downvotesComments: Downvotes[];
+  @Field(() => [DownvotesComments])
+  @OneToMany(
+    () => DownvotesComments,
+    (downvotesComment) => downvotesComment.user
+  )
+  downvotesComments: DownvotesComments[];
 }

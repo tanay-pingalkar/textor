@@ -12,6 +12,9 @@ query getPost($postId: Float!) {
     comment {
       id
       body
+      upvoted
+      downvoted
+      totalVotes
       user {
         name
       }
