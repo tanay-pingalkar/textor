@@ -29,6 +29,7 @@ const PORT = process.env.PORT || 5000;
     },
   });
   app.use(cookieParser());
+  app.set("trust proxy", 1);
   server.applyMiddleware({
     app,
     cors: {
