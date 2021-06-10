@@ -7,7 +7,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "start": "node dist/server.js",
-    "dev": "PORT=5000 nodemon dist/server.js NODE_ENV=developement",
+    "dev": "nodemon dist/server.js ",
     "typeorm": "node ./node_modules/typeorm/cli.js "
   },
   "dependencies": {
