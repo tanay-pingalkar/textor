@@ -4,9 +4,6 @@ server/dist
 client/.next
 client/yarn-error.log
 server/yarn-error.log
-server/yarn.lock
-server/yarn.lock
 node_modules
-yarn.lock
 server/.env
 client/.env
