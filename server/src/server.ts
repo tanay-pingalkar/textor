@@ -10,6 +10,7 @@ import { AuthenticationError } from "apollo-server";
 dotenv.config();
 
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 (async function main() {
@@ -34,6 +35,9 @@ const PORT = process.env.PORT || 5000;
       origin: ["http://localhost:3000"],
       credentials: true,
     },
+  });
+  app.get("/", (_, res) => {
+    res.send("great");
   });
   app.listen(PORT, () => {
     console.log(

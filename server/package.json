@@ -7,8 +7,8 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "start": "tsc && node dist/server.js",
-    "dev": "nodemon dist/server.js",
-    "typeorm": "node ./node_modules/typeorm/cli.js"
+    "dev": "PORT=5000 nodemon dist/server.js NODE_ENV=developement",
+    "typeorm": "node ./node_modules/typeorm/cli.js "
   },
   "dependencies": {
     "apollo-server": "^2.24.1",
