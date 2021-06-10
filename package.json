@@ -8,7 +8,7 @@
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
-    "heroku-postbuild": "cd server && npm install && tsc"
+    "heroku-postbuild": "cd server && npm install && npx tsc"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",
