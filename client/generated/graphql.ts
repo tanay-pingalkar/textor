@@ -747,7 +747,6 @@ export function getSdk(
       variables?: AuthQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
     ): Promise<AuthQuery> {
-      console.log(client);
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<AuthQuery>(AuthDocument, variables, {

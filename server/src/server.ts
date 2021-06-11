@@ -39,6 +39,7 @@ const PORT = process.env.PORT || 5000;
       credentials: true,
     })
   );
+
   server.applyMiddleware({
     app,
     cors: false,

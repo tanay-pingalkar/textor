@@ -53,8 +53,6 @@ export class users {
       const token = jwtgen(user.id);
       res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
       });
       return {
         msg: "great",
@@ -90,8 +88,6 @@ export class users {
       const token = jwtgen(user.id);
       res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
       });
       return {
         msg: "great",
@@ -157,7 +153,7 @@ export class users {
         .leftJoinAndMapMany("Users.posts", "posts", "p", "Users.id=p.userId")
         .leftJoinAndMapMany("p.comment", "comments", "c", "c.postId=p.id")
         .getOne();
-      console.log(user.posts);
+
       if (user) {
         for (const post of user.posts) {
           await post.isUpvoted(user.id);

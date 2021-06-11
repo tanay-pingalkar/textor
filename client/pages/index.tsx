@@ -10,7 +10,7 @@ interface props {
 }
 const Home: React.FC<props> = ({ feed }) => {
   const [posts, setPosts] = useState<Posts[]>(feed);
-  console.log(process.env);
+
   return (
     <div>
       {posts.map((post, key) => (
