@@ -11,7 +11,17 @@ import { Users } from "../entities/user";
 import { jwtgen } from "../utils/jwtgen";
 import jwt from "jsonwebtoken";
 import { decodedToken, MyContext } from "src/utils/types";
+import { CookieOptions } from "express";
 
+const cookieConfig: CookieOptions = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  domain:
+    process.env.NODE_ENV === "production"
+      ? "https://textor.vercel.app/"
+      : undefined,
+};
 @Resolver()
 export class users {
   @Mutation(() => registerResponse)
@@ -51,15 +61,7 @@ export class users {
       registerInfo.password = await argon2.hash(registerInfo.password);
       const user = await Users.create(registerInfo).save();
       const token = jwtgen(user.id);
-      res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        domain:
-          process.env.NODE_ENV === "production"
-            ? "https://textor.vercel.app/"
-            : undefined,
-      });
+      res.cookie("token", token, cookieConfig);
       return {
         msg: "great",
       };
@@ -92,15 +94,7 @@ export class users {
     const isValidate = await argon2.verify(user.password, loginInfo.password);
     if (isValidate) {
       const token = jwtgen(user.id);
-      res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        domain:
-          process.env.NODE_ENV === "production"
-            ? "https://textor.vercel.app/"
-            : undefined,
-      });
+      res.cookie("token", token, cookieConfig);
       return {
         msg: "great",
       };
