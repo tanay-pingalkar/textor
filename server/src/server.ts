@@ -4,13 +4,12 @@ import express from "express";
 import { createSchema } from "./utils/createSchema";
 import { createCon } from "./utils/createCon";
 import dotenv from "dotenv";
-import { MyContext, sslConfig } from "./utils/types";
+import { MyContext } from "./utils/types";
 import cookieParser from "cookie-parser";
 import { AuthenticationError } from "apollo-server";
 import cors from "cors";
 import https from "https";
 import http from "http";
-import fs from "fs";
 
 dotenv.config();
 
@@ -20,14 +19,7 @@ const PORT = process.env.PORT || 5000;
 
 (async function main() {
   await createCon();
-  const configurations: sslConfig = {
-    production: { ssl: true, port: PORT, hostname: process.env.CORS_ORIGIN },
-    developement: { ssl: false, port: PORT, hostname: process.env.CORS_ORIGIN },
-  };
-  const environment = process.env.NODE_ENV || "production";
 
-  const config = configurations[environment];
-  console.log(config, environment, configurations[environment]);
   const schema = await createSchema();
   const server = new ApolloServer({
     schema,
@@ -59,7 +51,7 @@ const PORT = process.env.PORT || 5000;
     cors: false,
   });
 
-  if (config.ssl) {
+  if (process.env.NODE_ENV === "production") {
     httpServer = https.createServer(
       {
         rejectUnauthorized: false,
@@ -69,7 +61,11 @@ const PORT = process.env.PORT || 5000;
   } else {
     httpServer = http.createServer(app);
   }
-  httpServer.listen({ port: config.port }, () => {
-    console.log("🚀 Server ready");
+  httpServer.listen({ port: PORT }, () => {
+    console.log(
+      `🚀 Server ready on port ${PORT} and the mode is ${
+        process.env.NODE_ENV || "developement"
+      }`
+    );
   });
 })();

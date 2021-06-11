@@ -8,8 +8,3 @@ export type MyContext = {
 export interface decodedToken {
   user_id: number;
 }
-
-export type sslConfig = Record<
-  string,
-  { ssl: boolean; port: string | 5000; hostname: string }
->;
