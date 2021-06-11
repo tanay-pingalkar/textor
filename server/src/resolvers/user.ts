@@ -54,7 +54,6 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
-        domain: process.env.CORS_ORIGIN,
       });
       return {
         msg: "great",
@@ -91,7 +90,6 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
-        domain: process.env.CORS_ORIGIN,
       });
       return {
         msg: "great",
