@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { feed } = await sdk.feed(
     {},
     {
-      cookies: req.headers.cookie,
+      cookie: req.headers.cookie,
     }
   );
   return {

@@ -86,6 +86,7 @@ export class posts {
     @Arg("lastPostId", { nullable: true }) lastPostId?: string
   ): Promise<Posts[]> {
     let userId;
+    console.log(req.cookies.token);
     if (req.cookies.token) {
       const obj = jwt.verify(
         req.cookies.token,
@@ -93,6 +94,7 @@ export class posts {
       ) as decodedToken;
       userId = obj.user_id;
     }
+
     try {
       let posts: Posts[];
       if (lastPostId) {

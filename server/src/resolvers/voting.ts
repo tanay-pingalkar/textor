@@ -288,8 +288,8 @@ export class voting {
   /*------------------downvoting-comment--------------*/
   @Mutation(() => downvoteResponse)
   async downvoteComment(
-    @Arg("commentId") commentId: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { req }: MyContext,
+    @Arg("commentId") commentId: string
   ): Promise<downvoteResponse> {
     let userId;
     if (req.cookies.token) {

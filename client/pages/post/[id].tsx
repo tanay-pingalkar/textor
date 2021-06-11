@@ -97,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const { getPost } = await sdk.getPost(
     { postId: postId },
     {
-      cookies: req.headers.cookie,
+      cookie: req.headers.cookie,
     }
   );
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
