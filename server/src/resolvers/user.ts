@@ -54,6 +54,11 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        domain:
+          process.env.NODE_ENV === "production"
+            ? "https://textor.vercel.app/"
+            : undefined,
       });
       return {
         msg: "great",
@@ -90,6 +95,11 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        domain:
+          process.env.NODE_ENV === "production"
+            ? "https://textor.vercel.app/"
+            : undefined,
       });
       return {
         msg: "great",
