@@ -62,8 +62,7 @@ const PORT = process.env.PORT || 5000;
   if (config.ssl) {
     httpServer = https.createServer(
       {
-        key: fs.readFileSync(`./ssl/${environment}/server.key`),
-        cert: fs.readFileSync(`./ssl/${environment}/server.crt`),
+        rejectUnauthorized: false,
       },
       app
     );
