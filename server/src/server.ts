@@ -33,7 +33,7 @@ const PORT = process.env.PORT || 5000;
   app.use(cookieParser());
   app.use(
     cors({
-      origin: [process.env.CORS_ORIGIN, "https://hoppscotch.io/"],
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
