@@ -6,7 +6,7 @@ import { createCon } from "./utils/createCon";
 import dotenv from "dotenv";
 import { MyContext } from "./utils/types";
 import cookieParser from "cookie-parser";
-import { AuthenticationError } from "apollo-server";
+// import { AuthenticationError } from "apollo-server";
 import cors from "cors";
 
 dotenv.config();
