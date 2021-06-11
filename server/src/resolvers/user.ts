@@ -84,7 +84,9 @@ export class users {
     const isValidate = await argon2.verify(user.password, loginInfo.password);
     if (isValidate) {
       const token = jwtgen(user.id);
-      res.cookie("token", token, { httpOnly: true, sameSite: "none" });
+      res.cookie("token", token, {
+        httpOnly: true,
+      });
       return {
         msg: "great",
       };
