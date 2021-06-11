@@ -51,7 +51,12 @@ export class users {
       registerInfo.password = await argon2.hash(registerInfo.password);
       const user = await Users.create(registerInfo).save();
       const token = jwtgen(user.id);
-      res.cookie("token", token, { httpOnly: true });
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        domain: process.env.CORS_ORIGIN,
+        secure: process.env.NODE_ENV === "production",
+      });
       return {
         msg: "great",
       };
@@ -86,6 +91,9 @@ export class users {
       const token = jwtgen(user.id);
       res.cookie("token", token, {
         httpOnly: true,
+        sameSite: "lax",
+        domain: process.env.CORS_ORIGIN,
+        secure: process.env.NODE_ENV === "production",
       });
       return {
         msg: "great",
