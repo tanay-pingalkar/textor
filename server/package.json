@@ -7,7 +7,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "start": "node dist/server.js",
-    "dev": "nodemon dist/server.js ",
+    "dev": "NODE_ENV=developement nodemon dist/server.js ",
     "typeorm": "node ./node_modules/typeorm/cli.js "
   },
   "dependencies": {

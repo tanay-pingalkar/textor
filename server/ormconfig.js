@@ -6,7 +6,7 @@ module.exports = {
   username: process.env.NAME,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
-  post: process.env.PORT,
+  post: process.env.DATABASE_PORT,
   synchronize: false,
   logging: false,
   ssl: { rejectUnauthorized: false },
