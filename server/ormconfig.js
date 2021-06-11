@@ -9,7 +9,6 @@ module.exports = {
   post: process.env.DATABASE_PORT,
   synchronize: false,
   logging: false,
-  ssl: { rejectUnauthorized: false },
   migrations: ["dist/migration/**/*.js"],
   entities: ["dist/entities/**/*.js"],
   cli: { migrationsDir: "src/migration" },
