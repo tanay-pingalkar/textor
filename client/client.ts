@@ -8,15 +8,4 @@ export const client = new GraphQLClient(process.env.ENDPOINT, {
   },
 });
 
-console.log(
-  client,
-  (async () =>
-    await client.request(
-      gql`
-        {
-          hello
-        }
-      `
-    ))()
-);
 export const sdk = getSdk(client);

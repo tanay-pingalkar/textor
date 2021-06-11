@@ -1,6 +1,7 @@
+import { gql } from "graphql-request";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
-import { sdk } from "../client";
+import { client, sdk } from "../client";
 import Post from "../components/post";
 import { Posts } from "../generated/graphql";
 
@@ -44,6 +45,15 @@ const Home: React.FC<props> = ({ feed }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  console.log(
+    await client.request(
+      gql`
+        {
+          hello
+        }
+      `
+    )
+  );
   const { feed } = await sdk.feed({}, req.headers as HeadersInit);
   return {
     props: {
