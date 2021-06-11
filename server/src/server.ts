@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 5000;
   const schema = await createSchema();
   const server = new ApolloServer({
     schema,
+    introspection: true,
     context: ({ req, res }): MyContext => {
       // if (req.headers.authorization !== process.env.BEARER) {
       //   throw new AuthenticationError("hacker quak dont hack");
