@@ -54,7 +54,6 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
-        domain: process.env.CORS_ORIGIN,
         secure: process.env.NODE_ENV === "production",
       });
       return {
@@ -92,7 +91,6 @@ export class users {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "lax",
-        domain: process.env.CORS_ORIGIN,
         secure: process.env.NODE_ENV === "production",
       });
       return {
