@@ -18,6 +18,7 @@ export default function Post(): JSX.Element {
       title: title,
       body: body,
     });
+
     if (res.post.msg === "great") {
       router.push("/");
     } else {

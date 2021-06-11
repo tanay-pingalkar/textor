@@ -54,7 +54,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     {
       username: query.username as string,
     },
-    req.headers as HeadersInit
+    {
+      cookies: req.headers.cookie,
+    }
   );
   return {
     props: {

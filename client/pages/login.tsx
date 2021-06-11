@@ -19,6 +19,7 @@ export default function Login(): JSX.Element {
         nameOrEmail: nameOrEmail,
         password: password,
       });
+
       if (login.msg === "great") {
         router.push("/");
       } else {

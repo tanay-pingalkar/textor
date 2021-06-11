@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
-import { client, sdk } from "../client";
+import { sdk } from "../client";
 import Post from "../components/post";
 import { Posts } from "../generated/graphql";
 
@@ -10,7 +10,7 @@ interface props {
 }
 const Home: React.FC<props> = ({ feed }) => {
   const [posts, setPosts] = useState<Posts[]>(feed);
-
+  console.log(process.env);
   return (
     <div>
       {posts.map((post, key) => (
@@ -45,8 +45,12 @@ const Home: React.FC<props> = ({ feed }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  console.log(await sdk.hello());
-  const { feed } = await sdk.feed({}, req.headers as HeadersInit);
+  const { feed } = await sdk.feed(
+    {},
+    {
+      cookies: req.headers.cookie,
+    }
+  );
   return {
     props: {
       feed,
