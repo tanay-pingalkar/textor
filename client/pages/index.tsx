@@ -45,15 +45,7 @@ const Home: React.FC<props> = ({ feed }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  console.log(
-    await client.request(
-      gql`
-        {
-          hello
-        }
-      `
-    )
-  );
+  console.log(await sdk.hello());
   const { feed } = await sdk.feed({}, req.headers as HeadersInit);
   return {
     props: {
