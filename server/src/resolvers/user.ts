@@ -53,6 +53,8 @@ export class users {
       const token = jwtgen(user.id);
       res.cookie("token", token, {
         httpOnly: true,
+        sameSite: "lax",
+        domain: process.env.CORS_ORIGIN,
       });
       return {
         msg: "great",
@@ -88,6 +90,8 @@ export class users {
       const token = jwtgen(user.id);
       res.cookie("token", token, {
         httpOnly: true,
+        sameSite: "lax",
+        domain: process.env.CORS_ORIGIN,
       });
       return {
         msg: "great",
