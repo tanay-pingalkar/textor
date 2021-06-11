@@ -15,12 +15,8 @@ import { CookieOptions } from "express";
 
 const cookieConfig: CookieOptions = {
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   secure: process.env.NODE_ENV === "production" ? true : false,
-  domain:
-    process.env.NODE_ENV === "production"
-      ? "https://textor.vercel.app/"
-      : undefined,
 };
 @Resolver()
 export class users {
