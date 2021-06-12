@@ -68,8 +68,11 @@ export class voting {
       if (isUpvoted) {
         isUpvoted.remove();
         post.totalVotes = post.totalVotes - 1;
-        user.reputation -= 1;
-        post.save();
+        await post.save();
+        if (user.id !== userId) {
+          user.reputation -= 1;
+          await user.save();
+        }
         return {
           msg: "great",
           action: UpvoteAction.UNUPVOTE,
@@ -79,14 +82,15 @@ export class voting {
       if (isDownvoted) {
         isDownvoted.remove();
         post.totalVotes = post.totalVotes + 1;
-        user.reputation += 1;
+        if (user.id !== userId) {
+          user.reputation += 1;
+        }
       }
 
       const upvote = Upvotes.create();
       user.upvotes.unshift(upvote);
       post.upvotes.unshift(upvote);
       post.totalVotes = post.totalVotes + 1;
-      user.reputation += 1;
 
       await upvote.save();
       await user.save();
@@ -156,8 +160,14 @@ export class voting {
       if (isDownvoted) {
         isDownvoted.remove();
         post.totalVotes = post.totalVotes + 1;
-        user.reputation += 1;
-        post.save();
+
+        await post.save();
+
+        if (user.id !== userId) {
+          user.reputation += 1;
+          await user.save();
+        }
+
         return {
           msg: "great",
           action: DownvoteAction.UNDOWNVOTE,
@@ -175,9 +185,13 @@ export class voting {
       post.downvotes.unshift(downvote);
 
       post.totalVotes = post.totalVotes - 1;
-      user.reputation -= 1;
+
+      if (user.id !== userId) {
+        user.reputation -= 1;
+      }
 
       await downvote.save();
+
       await user.save();
       await post.save();
 
@@ -249,8 +263,12 @@ export class voting {
       if (isUpvoted) {
         await isUpvoted.remove();
         comment.totalVotes = comment.totalVotes - 1;
-        user.reputation -= 1;
+
         await comment.save();
+        if (user.id !== userId) {
+          user.reputation -= 1;
+          await user.save();
+        }
         return {
           msg: "great",
           action: UpvoteAction.UNUPVOTE,
@@ -260,14 +278,18 @@ export class voting {
       if (isDownvoted) {
         await isDownvoted.remove();
         comment.totalVotes = comment.totalVotes + 1;
-        user.reputation += 1;
+        if (user.id !== userId) {
+          user.reputation += 1;
+        }
       }
 
       const upvote = UpvotesComments.create();
       user.upvotesComments.unshift(upvote);
       comment.upvotes.unshift(upvote);
       comment.totalVotes = comment.totalVotes + 1;
-      user.reputation += 1;
+      if (user.id !== userId) {
+        user.reputation += 1;
+      }
 
       await upvote.save();
       await user.save();
@@ -338,8 +360,11 @@ export class voting {
       if (isDownvoted) {
         await isDownvoted.remove();
         comment.totalVotes = comment.totalVotes + 1;
-        user.reputation += 1;
-        comment.save();
+        if (user.id !== userId) {
+          user.reputation += 1;
+          await user.save();
+        }
+        await comment.save();
         return {
           msg: "great",
           action: DownvoteAction.UNDOWNVOTE,
@@ -357,7 +382,9 @@ export class voting {
       comment.downvotes.unshift(downvote);
 
       comment.totalVotes = comment.totalVotes - 1;
-      user.reputation -= 1;
+      if (user.id !== userId) {
+        user.reputation -= 1;
+      }
 
       await downvote.save();
       await user.save();
