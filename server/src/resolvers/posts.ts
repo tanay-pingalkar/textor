@@ -39,15 +39,15 @@ export class posts {
       };
     }
 
-    if (title.length >= 35) {
+    if (title.length >= 70) {
       return {
-        msg: "title should be less than 35",
+        msg: "title should be less than 70",
       };
     }
 
-    if (body.length > 300) {
+    if (body.length > 700) {
       return {
-        msg: "your body extends the limit of 300 words",
+        msg: "your body extends the limit of 700 words",
       };
     }
 
