@@ -45,8 +45,7 @@ const Home: React.FC<props> = ({ feed }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  console.log(req.headers.cookie)
-   const { feed } = await sdk.feed(
+  const { feed } = await sdk.feed(
     {},
     {
       cookie: req.headers.cookie,
