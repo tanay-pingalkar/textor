@@ -17,7 +17,6 @@ const cookieConfig: CookieOptions = {
   httpOnly: true,
   sameSite: "lax",
   secure: process.env.NODE_ENV === "production" ? true : false,
-  domain: process.env.CORS_ORIGIN,
 };
 @Resolver()
 export class users {
