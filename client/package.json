@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.170",
+    "cookie": "^0.4.1",
     "dotenv": "^10.0.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
@@ -25,6 +26,7 @@
     "@graphql-codegen/typescript": "1.22.1",
     "@graphql-codegen/typescript-graphql-request": "^3.2.1",
     "@graphql-codegen/typescript-operations": "1.18.0",
+    "@types/cookie": "^0.4.0",
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
     "autoprefixer": "^10.0.4",

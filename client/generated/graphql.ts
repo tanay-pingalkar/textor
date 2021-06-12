@@ -250,6 +250,7 @@ export type RegisterInput = {
 export type RegisterResponse = {
   __typename?: 'registerResponse';
   msg: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type UpvoteResponse = {
@@ -265,7 +266,7 @@ export type DownvoteResFragment = (
 
 export type MsgAndTokenFragment = (
   { __typename?: 'registerResponse' }
-  & Pick<RegisterResponse, 'msg'>
+  & Pick<RegisterResponse, 'msg' | 'token'>
 );
 
 export type UpvoteResFragment = (
@@ -497,6 +498,7 @@ export const DownvoteResFragmentDoc = gql`
 export const MsgAndTokenFragmentDoc = gql`
     fragment msgAndToken on registerResponse {
   msg
+  token
 }
     `;
 export const UpvoteResFragmentDoc = gql`

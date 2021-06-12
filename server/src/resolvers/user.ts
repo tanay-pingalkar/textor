@@ -61,6 +61,7 @@ export class users {
       res.cookie("token", token, cookieConfig);
       return {
         msg: "great",
+        token: token,
       };
     } catch (error) {
       console.log(error);
@@ -94,6 +95,7 @@ export class users {
       res.cookie("token", token, cookieConfig);
       return {
         msg: "great",
+        token: token,
       };
     } else {
       return {

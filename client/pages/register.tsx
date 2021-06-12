@@ -21,7 +21,11 @@ export default function Register(): JSX.Element {
         email: email,
         password,
       });
-      if (register.msg === "great") {
+      if (register.msg === "great" && register.token) {
+        await fetch("/api/save", {
+          body: JSON.stringify({ token: register.token }),
+          method: "POST",
+        });
         router.push("/");
       } else {
         setError("*" + register.msg);

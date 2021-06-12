@@ -20,7 +20,11 @@ export default function Login(): JSX.Element {
         password: password,
       });
 
-      if (login.msg === "great") {
+      if (login.msg === "great" && login.token) {
+        await fetch("/api/save", {
+          body: JSON.stringify({ token: login.token }),
+          method: "POST",
+        });
         router.push("/");
       } else {
         setError("*" + login.msg);

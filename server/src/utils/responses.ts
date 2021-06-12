@@ -8,6 +8,9 @@ import { Comments } from "../entities/comment";
 export class registerResponse {
   @Field(() => String)
   msg: string;
+
+  @Field(() => String)
+  token?: string;
 }
 
 @ObjectType()
