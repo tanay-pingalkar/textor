@@ -45,6 +45,7 @@ const NavToggle: React.FC = () => {
             className="mt-3 pl-2 hover:underline "
             onClick={async () => {
               await sdk.logout();
+              await fetch("/api/logout");
               setAuth(false);
             }}
           >

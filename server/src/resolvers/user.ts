@@ -127,7 +127,7 @@ export class users {
   @Mutation(() => Boolean)
   logout(@Ctx() { res }: MyContext): boolean {
     try {
-      res.clearCookie("token");
+      res.clearCookie("token", cookieConfig);
       return true;
     } catch (error) {
       return false;
