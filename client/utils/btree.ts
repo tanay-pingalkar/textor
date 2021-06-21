@@ -15,6 +15,7 @@ export function Btree(comments: Array<Comments>): Ctree {
 
   const btree: Ctree = comments
     .filter((comment) => comment.parent === null)
+    .reverse()
     .map((comment) => {
       comment.children = comment.children
         .reverse()
