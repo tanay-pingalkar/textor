@@ -3,7 +3,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { postInput } from "../utils/inputs";
 import { postResponse } from "../utils/responses";
 import { Users } from "../entities/user";
-import { decodedToken, MyContext } from "src/utils/types";
+import { MyContext } from "src/utils/types";
 import jwt from "jsonwebtoken";
 import { Comments } from "../entities/comment";
 
@@ -82,19 +82,9 @@ export class posts {
 
   @Query(() => [Posts])
   async feed(
-    @Ctx() { req }: MyContext,
+    @Ctx() { userId }: MyContext,
     @Arg("lastPostId", { nullable: true }) lastPostId?: string
   ): Promise<Posts[]> {
-    let userId;
-    console.log(req.cookies.token);
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-    }
-
     try {
       let posts: Posts[];
       if (lastPostId) {
@@ -154,7 +144,7 @@ export class posts {
   @Query(() => Posts)
   async getPost(
     @Arg("postId") postId: number,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<Posts> {
     const post = await Posts.findOne(postId, { relations: ["user"] });
 
@@ -176,25 +166,14 @@ export class posts {
       .where("p.id = :postId", { postId: postId })
       .getMany();
 
-    let userId;
-
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-
-      if (userId) {
-        await post.isDownvoted(userId);
-        await post.isUpvoted(userId);
-        for (const comment of post.comment) {
-          await comment.isDownvoted(userId);
-          await comment.isUpvoted(userId);
-        }
+    if (userId) {
+      await post.isDownvoted(userId);
+      await post.isUpvoted(userId);
+      for (const comment of post.comment) {
+        await comment.isDownvoted(userId);
+        await comment.isUpvoted(userId);
       }
     }
-
     return post;
   }
 }

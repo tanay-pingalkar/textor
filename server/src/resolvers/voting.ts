@@ -9,8 +9,7 @@ import { Users } from "../entities/user";
 import { Posts } from "../entities/post";
 import { Upvotes, UpvotesComments } from "../entities/upvote";
 import { Downvotes, DownvotesComments } from "../entities/downvote";
-import { decodedToken, MyContext } from "../utils/types";
-import jwt from "jsonwebtoken";
+import { MyContext } from "../utils/types";
 import { Comments } from "../entities/comment";
 
 @Resolver()
@@ -19,18 +18,11 @@ export class voting {
   @Mutation(() => upvoteResponse)
   async upvote(
     @Arg("postId") postId: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<upvoteResponse> {
-    let userId;
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-    } else {
+    if (!userId) {
       return {
-        msg: "user not exists",
+        msg: "user not exist",
       };
     }
 
@@ -40,7 +32,7 @@ export class voting {
       });
 
       const post = await Posts.findOne(postId, {
-        relations: ["upvotes", "downvotes"],
+        relations: ["upvotes", "downvotes", "user"],
       });
 
       if (!user) {
@@ -68,11 +60,12 @@ export class voting {
       if (isUpvoted) {
         isUpvoted.remove();
         post.totalVotes = post.totalVotes - 1;
-        await post.save();
-        if (user.id !== userId) {
-          user.reputation -= 1;
-          await user.save();
+        if (post.user.id !== user.id) {
+          post.user.reputation -= 1;
         }
+        await post.user.save();
+        await post.save();
+
         return {
           msg: "great",
           action: UpvoteAction.UNUPVOTE,
@@ -82,8 +75,8 @@ export class voting {
       if (isDownvoted) {
         isDownvoted.remove();
         post.totalVotes = post.totalVotes + 1;
-        if (user.id !== userId) {
-          user.reputation += 1;
+        if (post.user.id !== user.id) {
+          post.user.reputation += 1;
         }
       }
 
@@ -92,8 +85,13 @@ export class voting {
       post.upvotes.unshift(upvote);
       post.totalVotes = post.totalVotes + 1;
 
+      if (post.user.id !== user.id) {
+        post.user.reputation += 1;
+      }
+
       await upvote.save();
       await user.save();
+      await post.user.save();
       await post.save();
 
       return {
@@ -113,18 +111,11 @@ export class voting {
   @Mutation(() => downvoteResponse)
   async downvote(
     @Arg("postId") postId: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<downvoteResponse> {
-    let userId;
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-    } else {
+    if (!userId) {
       return {
-        msg: "user not exists",
+        msg: "user not exist",
       };
     }
     try {
@@ -132,7 +123,7 @@ export class voting {
         relations: ["upvotes", "downvotes"],
       });
       const post = await Posts.findOne(postId, {
-        relations: ["upvotes", "downvotes"],
+        relations: ["upvotes", "downvotes", "user"],
       });
 
       if (!user) {
@@ -161,12 +152,12 @@ export class voting {
         isDownvoted.remove();
         post.totalVotes = post.totalVotes + 1;
 
-        await post.save();
-
-        if (user.id !== userId) {
-          user.reputation += 1;
-          await user.save();
+        if (post.user.id !== userId) {
+          post.user.reputation += 1;
         }
+
+        await post.user.save();
+        await post.save();
 
         return {
           msg: "great",
@@ -177,7 +168,9 @@ export class voting {
       if (isUpvoted) {
         isUpvoted.remove();
         post.totalVotes = post.totalVotes - 1;
-        user.reputation -= 1;
+        if (post.user.id !== userId) {
+          post.user.reputation -= 1;
+        }
       }
 
       const downvote = Downvotes.create();
@@ -186,13 +179,13 @@ export class voting {
 
       post.totalVotes = post.totalVotes - 1;
 
-      if (user.id !== userId) {
-        user.reputation -= 1;
+      if (post.user.id !== userId) {
+        post.user.reputation -= 1;
       }
 
       await downvote.save();
-
       await user.save();
+      await post.user.save();
       await post.save();
 
       return {
@@ -211,18 +204,11 @@ export class voting {
   @Mutation(() => upvoteResponse)
   async upvoteComment(
     @Arg("commentId") commentId: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<upvoteResponse> {
-    let userId;
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-    } else {
+    if (!userId) {
       return {
-        msg: "user not exists",
+        msg: "user not exist",
       };
     }
 
@@ -232,7 +218,7 @@ export class voting {
       });
 
       const comment = await Comments.findOne(commentId, {
-        relations: ["upvotes", "downvotes"],
+        relations: ["upvotes", "downvotes", "user"],
       });
 
       if (!user) {
@@ -263,12 +249,12 @@ export class voting {
       if (isUpvoted) {
         await isUpvoted.remove();
         comment.totalVotes = comment.totalVotes - 1;
-
-        await comment.save();
-        if (user.id !== userId) {
-          user.reputation -= 1;
-          await user.save();
+        if (comment.user.id !== userId) {
+          comment.user.reputation -= 1;
         }
+        await comment.user.save();
+        await comment.save();
+
         return {
           msg: "great",
           action: UpvoteAction.UNUPVOTE,
@@ -278,8 +264,8 @@ export class voting {
       if (isDownvoted) {
         await isDownvoted.remove();
         comment.totalVotes = comment.totalVotes + 1;
-        if (user.id !== userId) {
-          user.reputation += 1;
+        if (comment.user.id !== userId) {
+          comment.user.reputation += 1;
         }
       }
 
@@ -287,12 +273,13 @@ export class voting {
       user.upvotesComments.unshift(upvote);
       comment.upvotes.unshift(upvote);
       comment.totalVotes = comment.totalVotes + 1;
-      if (user.id !== userId) {
-        user.reputation += 1;
+      if (comment.user.id !== userId) {
+        comment.user.reputation += 1;
       }
 
       await upvote.save();
       await user.save();
+      await comment.user.save();
       await comment.save();
 
       return {
@@ -310,19 +297,12 @@ export class voting {
   /*------------------downvoting-comment--------------*/
   @Mutation(() => downvoteResponse)
   async downvoteComment(
-    @Ctx() { req }: MyContext,
+    @Ctx() { userId }: MyContext,
     @Arg("commentId") commentId: string
   ): Promise<downvoteResponse> {
-    let userId;
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
-    } else {
+    if (!userId) {
       return {
-        msg: "user not exists",
+        msg: "user not exist",
       };
     }
     try {
@@ -330,7 +310,7 @@ export class voting {
         relations: ["upvotesComments", "downvotesComments"],
       });
       const comment = await Comments.findOne(commentId, {
-        relations: ["upvotes", "downvotes"],
+        relations: ["upvotes", "downvotes", "user"],
       });
 
       if (!user) {
@@ -360,10 +340,10 @@ export class voting {
       if (isDownvoted) {
         await isDownvoted.remove();
         comment.totalVotes = comment.totalVotes + 1;
-        if (user.id !== userId) {
-          user.reputation += 1;
-          await user.save();
+        if (comment.user.id !== userId) {
+          comment.user.reputation += 1;
         }
+        await comment.user.save();
         await comment.save();
         return {
           msg: "great",
@@ -374,7 +354,9 @@ export class voting {
       if (isUpvoted) {
         await isUpvoted.remove();
         comment.totalVotes = comment.totalVotes - 1;
-        user.reputation -= 1;
+        if (comment.user.id !== userId) {
+          comment.user.reputation -= 1;
+        }
       }
 
       const downvote = DownvotesComments.create();
@@ -382,12 +364,13 @@ export class voting {
       comment.downvotes.unshift(downvote);
 
       comment.totalVotes = comment.totalVotes - 1;
-      if (user.id !== userId) {
-        user.reputation -= 1;
+      if (comment.user.id !== userId) {
+        comment.user.reputation -= 1;
       }
 
       await downvote.save();
       await user.save();
+      await comment.user.save();
       await comment.save();
 
       return {

@@ -6,7 +6,11 @@ export default function save(req: NextApiRequest, res: NextApiResponse): void {
     const body = JSON.parse(req.body);
     res.setHeader(
       "Set-Cookie",
-      serialize("token", body.token, { path: "/", httpOnly: true })
+      serialize("token", body.token, {
+        path: "/",
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 2,
+      })
     );
     res.status(200).json({ msg: "great" });
   } else {

@@ -8,7 +8,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
     <div>
       {msg === "great" ? (
         <>
-          <div className="py-2 px-5  border-white border-b-2 flex justify-between">
+          <div className="py-2 px-5 border-b-2 flex justify-between">
             <div>
               <h1 className="text-2xl font-semibold">
                 {user ? user.name : ""}
@@ -20,7 +20,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
             </div>
             {me ? <button className="h-6 mt-2">edit</button> : <></>}
           </div>
-          <div className="py-2 px-5  border-white border-b-2 flex">
+          <div className="py-2 px-5 border-b-2 flex">
             <p className="hover:underline text-sm">your posts</p>
           </div>
           {user.posts.map((post, key) => (

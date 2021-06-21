@@ -4,8 +4,7 @@ import { commentInput } from "../utils/inputs";
 import { Users } from "../entities/user";
 import { Posts } from "../entities/post";
 import { Comments } from "../entities/comment";
-import { decodedToken, MyContext } from "../utils/types";
-import jwt from "jsonwebtoken";
+import { MyContext } from "../utils/types";
 import { getManager } from "typeorm";
 
 @Resolver()
@@ -13,20 +12,18 @@ export class commenting {
   @Mutation(() => commentResponse)
   async comment(
     @Arg("commentInfo") { postId, body, commentId }: commentInput,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<commentResponse> {
-    let userId;
     if (body.length < 5) {
       return {
         msg: "body length should be less than 5",
       };
     }
-    if (req.cookies.token) {
-      const obj = jwt.verify(
-        req.cookies.token,
-        process.env.JWT_SECRET
-      ) as decodedToken;
-      userId = obj.user_id;
+
+    if (!userId) {
+      return {
+        msg: "login please",
+      };
     }
 
     const user = await Users.findOne(userId);

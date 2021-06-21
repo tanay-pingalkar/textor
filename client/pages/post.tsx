@@ -7,7 +7,7 @@ export default function Post(): JSX.Element {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-
+  
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (title.trim() == "" || body.trim() == "") {

@@ -34,7 +34,6 @@ const Nav: React.FC<props> = (props) => {
       (async () => {
         try {
           const { auth } = await sdk.auth();
-          console.log(auth);
           if (auth.msg === "great" && auth.user) {
             setAuth(true);
             setName(auth.user.name);
@@ -78,7 +77,7 @@ const Nav: React.FC<props> = (props) => {
       >
         <div className="bg-gray-200 h-screen w-screen sm:w-3/4 sm:m-auto dark:bg-gray-700">
           <div>
-            <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-white border-b-2 p-1">
+            <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-b-2 p-1">
               Textor
             </h1>
 
@@ -91,7 +90,7 @@ const Nav: React.FC<props> = (props) => {
             </div>
             {props.children}
           </div>
-          <div className="sticky px-5 border-t-2 flex  border-white py-1 justify-between top-full">
+          <div className="sticky px-5 border-t-2 flex  py-1 justify-between top-full">
             <a
               className="font-light hover:underline dark:text-white"
               href="https://github.com/tanay-pingalkar/textor"

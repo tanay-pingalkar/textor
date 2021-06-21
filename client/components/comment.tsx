@@ -44,12 +44,14 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
     }
   };
   return (
-    <div className="mt-2">
+    <div className="mt-2 ">
       <div className="px-5 pt-1 ">
         <Link href={`/profile/${comment.user.name}`}>
           <p className="hover:underline">comment by {comment.user.name}</p>
         </Link>
-        <h1 className=" break-normal text-sm mt-1">{comment.body}</h1>
+        <h1 className=" break-normal text-sm mt-1 break-words">
+          {comment.body}
+        </h1>
         <span className="flex justify-between">
           <Votes
             Upvoted={comment.upvoted}
@@ -80,7 +82,7 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
       </div>
 
       {comment.children.map((child) => (
-        <div className="ml-5 border-white  border-l-2 ">
+        <div className="ml-5 border-l-2 ">
           <Comment comment={child} postId={postId} />
         </div>
       ))}

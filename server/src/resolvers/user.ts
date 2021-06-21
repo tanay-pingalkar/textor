@@ -10,7 +10,7 @@ import argon2 from "argon2";
 import { Users } from "../entities/user";
 import { jwtgen } from "../utils/jwtgen";
 import jwt from "jsonwebtoken";
-import { decodedToken, MyContext } from "src/utils/types";
+import { MyContext } from "src/utils/types";
 import { CookieOptions } from "express";
 
 const cookieConfig: CookieOptions = {
@@ -137,19 +137,11 @@ export class users {
   @Query(() => profileResponse)
   async profile(
     @Arg("username") username: string,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<profileResponse> {
     let requestUserId;
-    if (req.cookies.token) {
-      try {
-        const obj = jwt.verify(
-          req.cookies.token,
-          process.env.JWT_SECRET
-        ) as decodedToken;
-        requestUserId = obj.user_id;
-      } catch {
-        /**/
-      }
+    if (userId) {
+      requestUserId = userId;
     }
 
     try {

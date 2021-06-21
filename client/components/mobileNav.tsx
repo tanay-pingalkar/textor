@@ -7,7 +7,7 @@ interface props {
 const MobileNav: React.FC<props> = ({ where }) => {
   const router = useRouter();
   return (
-    <div className="border-white border-b-2">
+    <div className="border-b-2">
       <div className=" flex justify-between px-5">
         <h1 className="font-bold text-2xl tracking-widest  pt-2 pb-2 w-26 ">
           {where}

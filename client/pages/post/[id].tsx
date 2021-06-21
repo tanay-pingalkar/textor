@@ -46,7 +46,7 @@ const Post: React.FC<props> = ({ post }) => {
   };
   return (
     <div className="">
-      <div className="border-white border-b-2 px-5 pt-2">
+      <div className=" border-b-2 px-5 pt-2">
         <div className="flex justify-between">
           <h1 className="text-lg sm:text-xl font-medium">{post.title}</h1>
           <Link href={`/profile/${post.user.name}`}>
@@ -67,7 +67,7 @@ const Post: React.FC<props> = ({ post }) => {
           <p className="hover:underline">pin</p>
         </span>
       </div>
-      <div className="mt-3">
+      <div className="mt-3 ">
         <form className="ml-5 " onSubmit={comment}>
           <h1>Add comment</h1>
           <textarea

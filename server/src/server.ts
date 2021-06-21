@@ -4,10 +4,11 @@ import express from "express";
 import { createSchema } from "./utils/createSchema";
 import { createCon } from "./utils/createCon";
 import dotenv from "dotenv";
-import { MyContext } from "./utils/types";
+import { decodedToken, MyContext } from "./utils/types";
 import cookieParser from "cookie-parser";
 // import { AuthenticationError } from "apollo-server";
 import cors from "cors";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -22,12 +23,23 @@ const PORT = process.env.PORT || 5000;
     schema,
     introspection: true,
     context: ({ req, res }): MyContext => {
-      // if (req.headers.authorization !== process.env.BEARER) {
-      //   throw new AuthenticationError("hacker quak dont hack");
-      // }
+      let userId: number | null = null;
+      if (req.cookies.token) {
+        try {
+          const obj = jwt.verify(
+            req.cookies.token,
+            process.env.JWT_SECRET
+          ) as decodedToken;
+          userId = obj.user_id;
+        } catch {
+          //userId to be null if token not exist or is expired
+        }
+      }
+
       return {
         req: req,
         res: res,
+        userId: userId,
       };
     },
   });
@@ -39,7 +51,7 @@ const PORT = process.env.PORT || 5000;
 
   app.use(
     cors({
-      origin: [process.env.CORS_ORIGIN,"https://hoppscotch.io"],
+      origin: [process.env.CORS_ORIGIN],
       credentials: true,
     })
   );

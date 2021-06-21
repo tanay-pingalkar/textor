@@ -23,7 +23,7 @@ const Post: React.FC<props> = ({
   discussion,
 }) => {
   return (
-    <div className="px-5 pt-1 border-b-2 border-white ">
+    <div className="px-5 pt-1 border-b-2  ">
       <div className="flex justify-between">
         <h1 className="text-lg sm:text-xl font-medium">{title}</h1>
         <Link href={`/profile/${user}`}>

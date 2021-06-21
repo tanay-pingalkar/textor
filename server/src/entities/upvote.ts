@@ -33,6 +33,7 @@ export class Upvotes extends BaseEntity {
   @Field(() => Posts)
   @ManyToOne(() => Posts, (post) => post.upvotes)
   post: Posts;
+  
 }
 
 @Entity()

@@ -4,7 +4,7 @@
 
 @layer base {
   h1 {
-    @apply font-rubik dark:text-white dark:border-gray-500;
+    @apply font-rubik dark:text-white dark:border-gray-500 border-white;
   }
 
   p {
@@ -14,7 +14,7 @@
     @apply px-3 bg-gray-300 hover:bg-black hover:text-white  hover:underline;
   }
   div {
-    @apply dark:border-gray-500 dark:bg-gray-700 bg-gray-200;
+    @apply dark:border-gray-500 dark:bg-gray-700 border-white bg-gray-200;
   }
   body {
     @apply h-screen;

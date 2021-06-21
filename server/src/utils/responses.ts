@@ -9,7 +9,7 @@ export class registerResponse {
   @Field(() => String)
   msg: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   token?: string;
 }
 
