@@ -30,7 +30,7 @@
 }
 
 .mdlink a {
-  @apply font-bold underline;
+  @apply font-medium underline text-sm;
 }
 
 .mdlink p {
@@ -58,5 +58,5 @@
 }
 
 .post a {
-  @apply underline;
+  @apply underline text-sm font-medium;
 }
