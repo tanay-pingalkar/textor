@@ -17,10 +17,13 @@ interface props {
 }
 
 const Post: React.FC<props> = ({ post }) => {
+  const [nbody, setNbody] = useState(post.body);
+  const [title, setTitle] = useState(post.title);
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
   const { auth, isMobile, dark } = useContext(Ctx);
   const router = useRouter();
+  const [edit, setEdit] = useState(false);
   const comment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!auth) {
@@ -50,23 +53,62 @@ const Post: React.FC<props> = ({ post }) => {
   return (
     <div className="">
       <div className=" border-b-2 px-5 pt-2">
-        <div className="flex justify-between">
-          <h1 className="text-lg sm:text-xl font-medium">{post.title}</h1>
-          <Link href={`/profile/${post.user.name}`}>
-            <p className="hover:underline">posted by {post.user.name}</p>
-          </Link>
-        </div>
-
-        <div className="post">
-          <ReactMarkdown
-            skipHtml={true}
-            allowedElements={["p", "a", "code", "pre"]}
-            linkTarget="_blank"
-            components={syntaxComponents(dark)}
+        {edit ? (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const res = await sdk.editPost({
+                postId: Number(post.id),
+                title: title,
+                body: nbody,
+              });
+              if (res.edit.msg === "great") {
+                setTitle(res.edit.post.title);
+                setNbody(res.edit.post.body);
+                setEdit(false);
+              } else {
+                alert(res.edit.msg);
+              }
+            }}
           >
-            {post.body}
-          </ReactMarkdown>
-        </div>
+            <h1 className=" text-xl">Edit</h1>
+            <input
+              value={title}
+              className="w-full"
+              onChange={(e) => setTitle(e.target.value)}
+            ></input>
+            <br />
+            <textarea
+              value={nbody}
+              className="w-full h-24 mt-2"
+              onChange={(e) => setNbody(e.target.value)}
+            ></textarea>
+            <br />
+            <button className="mb-1">submit</button>
+          </form>
+        ) : (
+          <>
+            <div className="flex justify-between">
+              <h1 className="text-lg sm:text-xl font-medium w-full break-all">
+                {title}
+              </h1>
+              <Link href={`/profile/${post.user.name}`}>
+                <p className="hover:underline">posted by {post.user.name}</p>
+              </Link>
+            </div>
+            <div className="post">
+              <ReactMarkdown
+                skipHtml={true}
+                allowedElements={["p", "a", "code", "pre"]}
+                linkTarget="_blank"
+                components={syntaxComponents(dark)}
+              >
+                {nbody}
+              </ReactMarkdown>
+            </div>
+          </>
+        )}
+
         <span className="flex justify-between">
           <Votes
             Upvoted={post.upvoted}
@@ -74,7 +116,42 @@ const Post: React.FC<props> = ({ post }) => {
             Votes={post.totalVotes}
             postId={post.id}
           ></Votes>
-          <p className="hover:underline">pin</p>
+          {post.me ? (
+            <div className="flex flex-wrap">
+              <a
+                className=" hover:underline ml-3"
+                onClick={() => setEdit(!edit)}
+              >
+                edit
+              </a>
+              <a
+                className=" hover:underline ml-3"
+                onClick={async () => {
+                  const con = confirm("are you sure");
+                  if (!con) {
+                    return;
+                  }
+                  try {
+                    const res = await sdk.deletePost({
+                      postId: Number(post.id),
+                    });
+                    if (res.delete === "great") {
+                      router.reload();
+                    } else {
+                      alert("sorry cannot delete");
+                    }
+                  } catch (err) {
+                    console.log(err);
+                    alert("unusual error");
+                  }
+                }}
+              >
+                delete
+              </a>
+            </div>
+          ) : (
+            <></>
+          )}
         </span>
       </div>
       <div className="mt-3 ">
