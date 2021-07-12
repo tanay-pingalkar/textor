@@ -1,12 +1,6 @@
 query feed($lastPostId: String) {
   feed(lastPostId: $lastPostId) {
-    id
-    title
-    body
-    upvoted
-    downvoted
-    totalVotes
-    discussion
+    ...basicPost
     user {
       name
     }

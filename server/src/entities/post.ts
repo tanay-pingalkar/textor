@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  DeleteDateColumn,
 } from "typeorm";
 import { Comments } from "./comment";
 import { Downvotes } from "./downvote";
@@ -28,6 +29,9 @@ export class Posts extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt = Date();
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @Field(() => String)
   @Column()
@@ -78,6 +82,13 @@ export class Posts extends BaseEntity {
   @Field(() => Int)
   get discussion(): number {
     return this.comment.length;
+  }
+
+  @Field(() => Boolean)
+  me = false;
+
+  setMe(userId: number): void {
+    this.me = userId == this.user.id;
   }
 
   @Field(() => Boolean)

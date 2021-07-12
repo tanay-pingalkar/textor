@@ -18,7 +18,9 @@
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-markdown": "^6.0.2",
     "react-responsive": "^8.2.0",
+    "react-syntax-highlighter": "^15.4.3",
     "react-toggle-dark-mode": "^1.0.4"
   },
   "devDependencies": {
@@ -29,6 +31,7 @@
     "@types/cookie": "^0.4.0",
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
+    "@types/react-syntax-highlighter": "^13.5.2",
     "autoprefixer": "^10.0.4",
     "postcss": "^8.1.10",
     "tailwindcss": "^2.1.1",

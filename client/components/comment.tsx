@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useContext, useState } from "react";
-import { sdk } from "../client";
-import { Ctx } from "../context";
+import { sdk } from "../utils/client";
+import { Ctx } from "../utils/context";
 import { Ctree } from "../utils/types";
 import Votes from "./votes";
+import ReactMarkdown from "react-markdown";
+import { syntaxComponents } from "../utils/syntaxComponent";
 
 const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
   comment,
@@ -12,8 +14,10 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
 }) => {
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-  const { auth } = useContext(Ctx);
+  const { auth, dark, isMobile } = useContext(Ctx);
   const [reply, setReply] = useState(false);
+  const [cbody, setCbody] = useState(comment.body);
+  const [edit, setEdit] = useState(false);
   const router = useRouter();
   const commentIt = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,11 +51,47 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
     <div className="mt-2 ">
       <div className="px-5 pt-1 ">
         <Link href={`/profile/${comment.user.name}`}>
-          <p className="hover:underline">comment by {comment.user.name}</p>
+          <a className="hover:underline">comment by {comment.user.name}</a>
         </Link>
-        <h1 className=" break-normal text-sm mt-1 break-words">
-          {comment.body}
-        </h1>
+        {edit ? (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const res = await sdk.editComment({
+                commentId: Number(comment.id),
+                body: cbody,
+              });
+              if (res.editComment.msg === "great") {
+                setCbody(res.editComment.comment.body);
+                setEdit(false);
+              } else {
+                alert(res.editComment.msg);
+              }
+            }}
+          >
+            <h1>edit</h1>
+            <textarea
+              value={cbody}
+              className="w-full h-24"
+              onChange={(e) => {
+                setCbody(e.target.value);
+              }}
+            ></textarea>
+            <button className="mb-1">submit</button>
+          </form>
+        ) : (
+          <div className="font-rubik mdlink">
+            <ReactMarkdown
+              skipHtml={true}
+              allowedElements={["code", "p", "a", "pre"]}
+              linkTarget="_blank"
+              components={syntaxComponents(dark)}
+            >
+              {cbody}
+            </ReactMarkdown>
+          </div>
+        )}
+
         <span className="flex justify-between">
           <Votes
             Upvoted={comment.upvoted}
@@ -59,16 +99,49 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
             Downvoted={comment.downvoted}
             commentId={comment.id}
           />
-          <p className="hover:underline mb-1" onClick={() => setReply(!reply)}>
-            reply
-          </p>
+          <span className="flex flex-wrap">
+            {comment.me ? (
+              <>
+                <a onClick={() => setEdit(true)}>edit</a>
+                <p
+                  className="hover:underline ml-3"
+                  onClick={async () => {
+                    const sure = confirm(
+                      "are you sure, you want to delete comment"
+                    );
+                    if (!sure) {
+                      return;
+                    }
+
+                    const res = await sdk.deleteComment({
+                      commentId: Number(comment.id),
+                    });
+                    if (res.deleteComment === "great") {
+                      router.reload();
+                    }
+                  }}
+                >
+                  delete
+                </p>
+              </>
+            ) : (
+              <></>
+            )}
+
+            <p
+              className="hover:underline mb-1 ml-3  "
+              onClick={() => setReply(!reply)}
+            >
+              reply
+            </p>
+          </span>
         </span>
 
         {reply ? (
           <form className="ml-5 " onSubmit={commentIt}>
             <h1>Add comment</h1>
             <textarea
-              className=""
+              className={`${isMobile ? " w-full" : "w-80 h-24 resize"}`}
               onChange={(e) => setBody(e.target.value)}
               value={body}
             ></textarea>{" "}

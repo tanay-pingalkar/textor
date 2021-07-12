@@ -14,9 +14,9 @@ export class commenting {
     @Arg("commentInfo") { postId, body, commentId }: commentInput,
     @Ctx() { userId }: MyContext
   ): Promise<commentResponse> {
-    if (body.length < 5) {
+    if (body.trim().length === 0) {
       return {
-        msg: "body length should be less than 5",
+        msg: "comment should have some content",
       };
     }
 
@@ -84,6 +84,48 @@ export class commenting {
     }
   }
 
+  @Mutation(() => commentResponse)
+  async editComment(
+    @Arg("body") body: string,
+    @Arg("commentId") commentId: number,
+    @Ctx() { userId }: MyContext
+  ): Promise<commentResponse> {
+    if (body.trim().length === 0) {
+      return {
+        msg: "comment should have some content",
+      };
+    }
+
+    try {
+      const comments = getManager().getTreeRepository(Comments);
+      const comment = await comments.findOne(commentId, {
+        relations: ["user"],
+      });
+      if (comment) {
+        if (comment.user.id === userId) {
+          comment.body = body;
+          await comment.save();
+          return {
+            msg: "great",
+            comment: comment,
+          };
+        } else {
+          return {
+            msg: "you dont have permission",
+          };
+        }
+      } else {
+        return {
+          msg: "comment not exist",
+        };
+      }
+    } catch (err) {
+      return {
+        msg: "cannot find comment",
+      };
+    }
+  }
+
   @Query(() => [Comments])
   async thread(@Arg("postId") postId: number): Promise<Comments[]> {
     const comments = getManager().getTreeRepository(Comments);
@@ -100,5 +142,22 @@ export class commenting {
       .where("p.id = :postId", { postId: postId })
       .getMany();
     return ancestor;
+  }
+
+  @Mutation(() => String)
+  async deleteComment(
+    @Arg("commentId") postId: number,
+    @Ctx() { userId }: MyContext
+  ): Promise<string> {
+    const comment = await Comments.findOne(postId, {
+      relations: ["user"],
+    });
+
+    if (comment.user.id === userId) {
+      await comment.softRemove();
+      return "great";
+    } else {
+      return "you cannot delete";
+    }
   }
 }

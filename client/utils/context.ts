@@ -9,4 +9,6 @@ export const Ctx = createContext<{
   setReputation?: Dispatch<SetStateAction<number>>;
   dark?: boolean;
   setDark?: Dispatch<SetStateAction<boolean>>;
+  isMobile?: boolean;
+  setMobile?: Dispatch<SetStateAction<boolean>>;
 }>({});

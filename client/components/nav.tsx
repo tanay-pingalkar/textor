@@ -1,19 +1,26 @@
 import { useMediaQuery } from "react-responsive";
 import { useContext, useEffect, useState } from "react";
-import { Ctx } from "../context";
+import { Ctx } from "../utils/context";
 import MainNav from "./desktopNav";
 import { useRouter } from "next/router";
 import MobileNav from "./mobileNav";
-import { sdk } from "../client";
+import { sdk } from "../utils/client";
 
 type props = JSX.IntrinsicAttributes &
   React.ClassAttributes<HTMLDivElement> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const Nav: React.FC<props> = (props) => {
-  const { auth, setAuth, setName, dark, setDark, setReputation } =
-    useContext(Ctx);
-  const [isMobile, setIsMobile] = useState(false);
+  const {
+    auth,
+    setAuth,
+    setName,
+    dark,
+    setDark,
+    setReputation,
+    setMobile,
+    isMobile,
+  } = useContext(Ctx);
 
   if (typeof window != "undefined") {
     const localDark = localStorage.getItem("dark");
@@ -26,7 +33,7 @@ const Nav: React.FC<props> = (props) => {
   let where = "";
 
   useEffect(() => {
-    setIsMobile(query);
+    setMobile(query);
   }, [query]);
 
   useEffect(() => {

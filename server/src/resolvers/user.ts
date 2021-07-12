@@ -149,12 +149,21 @@ export class users {
         .where("name = :username", { username: username })
         .leftJoinAndMapMany("Users.posts", "posts", "p", "Users.id=p.userId")
         .leftJoinAndMapMany("p.comment", "comments", "c", "c.postId=p.id")
+        .leftJoinAndMapMany(
+          "Users.comments",
+          "comments",
+          "co",
+          "Users.id=co.id"
+        )
         .getOne();
-
       if (user) {
         for (const post of user.posts) {
           await post.isUpvoted(user.id);
           await post.isDownvoted(user.id);
+        }
+        for (const comment of user.posts) {
+          await comment.isUpvoted(user.id);
+          await comment.isDownvoted(user.id);
         }
 
         return {

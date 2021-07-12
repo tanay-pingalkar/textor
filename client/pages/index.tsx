@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
-import { sdk } from "../client";
+import { sdk } from "../utils/client";
 import Post from "../components/post";
 import { Posts } from "../generated/graphql";
 
@@ -24,6 +24,7 @@ const Home: React.FC<props> = ({ feed }) => {
           key={key}
           postId={post.id}
           discussion={post.discussion}
+          me={post.me}
         ></Post>
       ))}
       <button

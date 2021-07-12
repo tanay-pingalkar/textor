@@ -80,6 +80,63 @@ export class posts {
     }
   }
 
+  @Mutation(() => postResponse)
+  async edit(
+    @Arg("postInfo") postInfo: postInput,
+    @Arg("postId") postId: number,
+    @Ctx() { userId }: MyContext
+  ): Promise<postResponse> {
+    const { title, body } = postInfo;
+
+    if (!userId) {
+      return {
+        msg: "please login to post ",
+      };
+    }
+
+    if (title.length <= 3) {
+      return {
+        msg: "title should be greater than 3",
+      };
+    }
+
+    if (title.length >= 70) {
+      return {
+        msg: "title should be less than 70",
+      };
+    }
+
+    if (body.length > 700) {
+      return {
+        msg: "your body extends the limit of 700 words",
+      };
+    }
+
+    try {
+      const post = await Posts.findOne(postId, {
+        relations: ["user"],
+      });
+
+      if (post.user.id === userId) {
+        post.title = title;
+        post.body = body;
+        await post.save();
+        return {
+          msg: "great",
+          post: post,
+        };
+      } else {
+        return {
+          msg: "hacker hack dont quak",
+        };
+      }
+    } catch (err) {
+      return {
+        msg: "sorry we cannot update post right now",
+      };
+    }
+  }
+
   @Query(() => [Posts])
   async feed(
     @Ctx() { userId }: MyContext,
@@ -132,6 +189,7 @@ export class posts {
         for (const post of posts) {
           await post.isUpvoted(userId);
           await post.isDownvoted(userId);
+          post.setMe(userId);
         }
       }
       return posts;
@@ -167,13 +225,36 @@ export class posts {
       .getMany();
 
     if (userId) {
+      post.setMe(userId);
       await post.isDownvoted(userId);
       await post.isUpvoted(userId);
       for (const comment of post.comment) {
+        comment.setMe(userId);
         await comment.isDownvoted(userId);
         await comment.isUpvoted(userId);
       }
     }
     return post;
+  }
+
+  @Mutation(() => String)
+  async delete(
+    @Arg("postId") postId: number,
+    @Ctx() { userId }: MyContext
+  ): Promise<string> {
+    try {
+      const post = await Posts.findOne(postId, {
+        relations: ["user"],
+      });
+
+      if (post.user.id === userId) {
+        await post.softRemove();
+        return "great";
+      } else {
+        return "you cannot delete";
+      }
+    } catch (err) {
+      return "post not found";
+    }
   }
 }

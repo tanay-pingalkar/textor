@@ -1,20 +1,11 @@
 query getPost($postId: Float!) {
   getPost(postId: $postId) {
-    title
-    body
-    id
-    upvoted
-    downvoted
-    totalVotes
+    ...basicPost
     user {
       name
     }
     comment {
-      id
-      body
-      upvoted
-      downvoted
-      totalVotes
+      ...basicComments
       user {
         name
       }

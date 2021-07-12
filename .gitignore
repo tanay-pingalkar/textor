@@ -6,4 +6,4 @@ client/yarn-error.log
 server/yarn-error.log
 node_modules
 server/.env
-client/.env
+client/.env.local

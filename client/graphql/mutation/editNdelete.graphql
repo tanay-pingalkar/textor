@@ -1,0 +1,26 @@
+mutation deletePost($postId: Float!) {
+  delete(postId: $postId)
+}
+
+mutation editPost($postId: Float!, $title: String!, $body: String!) {
+  edit(postId: $postId, postInfo: { title: $title, body: $body }) {
+    msg
+    post {
+      title
+      body
+    }
+  }
+}
+
+mutation editComment($commentId: Float!, $body: String!) {
+  editComment(commentId: $commentId, body: $body) {
+    msg
+    comment {
+      body
+    }
+  }
+}
+
+mutation deleteComment($commentId: Float!) {
+  deleteComment(commentId: $commentId)
+}

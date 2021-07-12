@@ -11,6 +11,7 @@ import {
   Tree,
   TreeChildren,
   TreeParent,
+  DeleteDateColumn,
 } from "typeorm";
 import { DownvotesComments } from "./downvote";
 import { Posts } from "./post";
@@ -32,6 +33,9 @@ export class Comments extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt = Date();
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @Field(() => String)
   @Column()
@@ -91,4 +95,11 @@ export class Comments extends BaseEntity {
 
   @Field(() => Boolean)
   downvoted = false;
+
+  @Field(() => Boolean)
+  me = false;
+
+  setMe(userId: number): void {
+    this.me = userId == this.user.id;
+  }
 }

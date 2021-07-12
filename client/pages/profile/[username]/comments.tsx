@@ -1,9 +1,11 @@
 import { GetServerSideProps } from "next";
-import { sdk } from "../../client";
-import { ProfileResponse } from "../../generated/graphql";
-import Post from "../../components/post";
+import { sdk } from "../../../utils/client";
+import { ProfileWithCommentsQuery } from "../../../generated/graphql";
 
-const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
+const Home: React.FC<ProfileWithCommentsQuery> = ({
+  profile: { msg, me, user },
+}) => {
+  console.log(user);
   return (
     <div>
       {msg === "great" ? (
@@ -23,19 +25,6 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
           <div className="py-2 px-5 border-b-2 flex">
             <p className="hover:underline text-sm">your posts</p>
           </div>
-          {user.posts.map((post, key) => (
-            <Post
-              title={post.title}
-              body={post.body}
-              user={user.name}
-              votes={post.totalVotes}
-              upvoted={post.upvoted}
-              downvoted={post.downvoted}
-              key={key}
-              postId={post.id}
-              discussion={post.discussion}
-            ></Post>
-          ))}
         </>
       ) : (
         <h1>user not found</h1>
@@ -50,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query,
 }) => {
-  const { profile } = await sdk.profile(
+  const res = await sdk.profileWithComments(
     {
       username: query.username as string,
     },
@@ -60,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   );
   return {
     props: {
-      ...profile,
+      ...res,
     },
   };
 };

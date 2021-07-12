@@ -29,6 +29,7 @@ export type Comments = {
   parent?: Maybe<Scalars['Float']>;
   upvoted: Scalars['Boolean'];
   downvoted: Scalars['Boolean'];
+  me: Scalars['Boolean'];
 };
 
 export enum DownvoteAction {
@@ -59,11 +60,15 @@ export type Mutation = {
   register: RegisterResponse;
   logout: Scalars['Boolean'];
   post: PostResponse;
+  edit: PostResponse;
+  delete: Scalars['String'];
   upvote: UpvoteResponse;
   downvote: DownvoteResponse;
   upvoteComment: UpvoteResponse;
   downvoteComment: DownvoteResponse;
   comment: CommentResponse;
+  editComment: CommentResponse;
+  deleteComment: Scalars['String'];
 };
 
 
@@ -74,6 +79,17 @@ export type MutationRegisterArgs = {
 
 export type MutationPostArgs = {
   postInfo: PostInput;
+};
+
+
+export type MutationEditArgs = {
+  postId: Scalars['Float'];
+  postInfo: PostInput;
+};
+
+
+export type MutationDeleteArgs = {
+  postId: Scalars['Float'];
 };
 
 
@@ -101,6 +117,17 @@ export type MutationCommentArgs = {
   commentInfo: CommentInput;
 };
 
+
+export type MutationEditCommentArgs = {
+  commentId: Scalars['Float'];
+  body: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['Float'];
+};
+
 export type Posts = {
   __typename?: 'Posts';
   id: Scalars['ID'];
@@ -114,6 +141,7 @@ export type Posts = {
   totalVotes: Scalars['Float'];
   comment: Array<Comments>;
   discussion: Scalars['Int'];
+  me: Scalars['Boolean'];
   upvoted: Scalars['Boolean'];
   downvoted: Scalars['Boolean'];
 };
@@ -250,7 +278,7 @@ export type RegisterInput = {
 export type RegisterResponse = {
   __typename?: 'registerResponse';
   msg: Scalars['String'];
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type UpvoteResponse = {
@@ -258,6 +286,16 @@ export type UpvoteResponse = {
   msg: Scalars['String'];
   action?: Maybe<UpvoteAction>;
 };
+
+export type BasicCommentsFragment = (
+  { __typename?: 'Comments' }
+  & Pick<Comments, 'id' | 'body' | 'me' | 'upvoted' | 'downvoted' | 'totalVotes'>
+);
+
+export type BasicPostFragment = (
+  { __typename?: 'Posts' }
+  & Pick<Posts, 'id' | 'title' | 'body' | 'me' | 'upvoted' | 'downvoted' | 'totalVotes' | 'discussion'>
+);
 
 export type DownvoteResFragment = (
   { __typename?: 'downvoteResponse' }
@@ -321,6 +359,63 @@ export type DownvoteCommentMutation = (
     { __typename?: 'downvoteResponse' }
     & DownvoteResFragment
   ) }
+);
+
+export type DeletePostMutationVariables = Exact<{
+  postId: Scalars['Float'];
+}>;
+
+
+export type DeletePostMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'delete'>
+);
+
+export type EditPostMutationVariables = Exact<{
+  postId: Scalars['Float'];
+  title: Scalars['String'];
+  body: Scalars['String'];
+}>;
+
+
+export type EditPostMutation = (
+  { __typename?: 'Mutation' }
+  & { edit: (
+    { __typename?: 'postResponse' }
+    & Pick<PostResponse, 'msg'>
+    & { post?: Maybe<(
+      { __typename?: 'Posts' }
+      & Pick<Posts, 'title' | 'body'>
+    )> }
+  ) }
+);
+
+export type EditCommentMutationVariables = Exact<{
+  commentId: Scalars['Float'];
+  body: Scalars['String'];
+}>;
+
+
+export type EditCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { editComment: (
+    { __typename?: 'commentResponse' }
+    & Pick<CommentResponse, 'msg'>
+    & { comment?: Maybe<(
+      { __typename?: 'Comments' }
+      & Pick<Comments, 'body'>
+    )> }
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  commentId: Scalars['Float'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteComment'>
 );
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
@@ -414,11 +509,11 @@ export type FeedQuery = (
   { __typename?: 'Query' }
   & { feed: Array<(
     { __typename?: 'Posts' }
-    & Pick<Posts, 'id' | 'title' | 'body' | 'upvoted' | 'downvoted' | 'totalVotes' | 'discussion'>
     & { user: (
       { __typename?: 'Users' }
       & Pick<Users, 'name'>
     ) }
+    & BasicPostFragment
   )> }
 );
 
@@ -431,18 +526,19 @@ export type GetPostQuery = (
   { __typename?: 'Query' }
   & { getPost: (
     { __typename?: 'Posts' }
-    & Pick<Posts, 'title' | 'body' | 'id' | 'upvoted' | 'downvoted' | 'totalVotes'>
     & { user: (
       { __typename?: 'Users' }
       & Pick<Users, 'name'>
     ), comment: Array<(
       { __typename?: 'Comments' }
-      & Pick<Comments, 'id' | 'body' | 'upvoted' | 'downvoted' | 'totalVotes' | 'children' | 'parent'>
+      & Pick<Comments, 'children' | 'parent'>
       & { user: (
         { __typename?: 'Users' }
         & Pick<Users, 'name'>
       ) }
+      & BasicCommentsFragment
     )> }
+    & BasicPostFragment
   ) }
 );
 
@@ -483,12 +579,55 @@ export type ProfileQuery = (
       & Pick<Users, 'name' | 'reputation' | 'email'>
       & { posts: Array<(
         { __typename?: 'Posts' }
-        & Pick<Posts, 'upvoted' | 'downvoted' | 'id' | 'title' | 'body' | 'totalVotes' | 'discussion'>
+        & BasicPostFragment
       )> }
     )> }
   ) }
 );
 
+export type ProfileWithCommentsQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type ProfileWithCommentsQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
+    { __typename?: 'profileResponse' }
+    & Pick<ProfileResponse, 'msg' | 'me'>
+    & { user?: Maybe<(
+      { __typename?: 'Users' }
+      & Pick<Users, 'name' | 'reputation' | 'email'>
+      & { comments: Array<(
+        { __typename?: 'Comments' }
+        & BasicCommentsFragment
+      )> }
+    )> }
+  ) }
+);
+
+export const BasicCommentsFragmentDoc = gql`
+    fragment basicComments on Comments {
+  id
+  body
+  me
+  upvoted
+  downvoted
+  totalVotes
+}
+    `;
+export const BasicPostFragmentDoc = gql`
+    fragment basicPost on Posts {
+  id
+  title
+  body
+  me
+  upvoted
+  downvoted
+  totalVotes
+  discussion
+}
+    `;
 export const DownvoteResFragmentDoc = gql`
     fragment downvoteRes on downvoteResponse {
   msg
@@ -538,6 +677,37 @@ export const DownvoteCommentDocument = gql`
   }
 }
     ${DownvoteResFragmentDoc}`;
+export const DeletePostDocument = gql`
+    mutation deletePost($postId: Float!) {
+  delete(postId: $postId)
+}
+    `;
+export const EditPostDocument = gql`
+    mutation editPost($postId: Float!, $title: String!, $body: String!) {
+  edit(postId: $postId, postInfo: {title: $title, body: $body}) {
+    msg
+    post {
+      title
+      body
+    }
+  }
+}
+    `;
+export const EditCommentDocument = gql`
+    mutation editComment($commentId: Float!, $body: String!) {
+  editComment(commentId: $commentId, body: $body) {
+    msg
+    comment {
+      body
+    }
+  }
+}
+    `;
+export const DeleteCommentDocument = gql`
+    mutation deleteComment($commentId: Float!) {
+  deleteComment(commentId: $commentId)
+}
+    `;
 export const LogoutDocument = gql`
     mutation logout {
   logout
@@ -590,37 +760,22 @@ export const AuthDocument = gql`
 export const FeedDocument = gql`
     query feed($lastPostId: String) {
   feed(lastPostId: $lastPostId) {
-    id
-    title
-    body
-    upvoted
-    downvoted
-    totalVotes
-    discussion
+    ...basicPost
     user {
       name
     }
   }
 }
-    `;
+    ${BasicPostFragmentDoc}`;
 export const GetPostDocument = gql`
     query getPost($postId: Float!) {
   getPost(postId: $postId) {
-    title
-    body
-    id
-    upvoted
-    downvoted
-    totalVotes
+    ...basicPost
     user {
       name
     }
     comment {
-      id
-      body
-      upvoted
-      downvoted
-      totalVotes
+      ...basicComments
       user {
         name
       }
@@ -629,7 +784,8 @@ export const GetPostDocument = gql`
     }
   }
 }
-    `;
+    ${BasicPostFragmentDoc}
+${BasicCommentsFragmentDoc}`;
 export const HelloDocument = gql`
     query hello {
   hello
@@ -652,18 +808,28 @@ export const ProfileDocument = gql`
       reputation
       email
       posts {
-        upvoted
-        downvoted
-        id
-        title
-        body
-        totalVotes
-        discussion
+        ...basicPost
       }
     }
   }
 }
-    `;
+    ${BasicPostFragmentDoc}`;
+export const ProfileWithCommentsDocument = gql`
+    query profileWithComments($username: String!) {
+  profile(username: $username) {
+    msg
+    me
+    user {
+      name
+      reputation
+      email
+      comments {
+        ...basicComments
+      }
+    }
+  }
+}
+    ${BasicCommentsFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -680,6 +846,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     downvoteComment(variables: DownvoteCommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DownvoteCommentMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DownvoteCommentMutation>(DownvoteCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'downvoteComment');
+    },
+    deletePost(variables: DeletePostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeletePostMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeletePostMutation>(DeletePostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deletePost');
+    },
+    editPost(variables: EditPostMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<EditPostMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<EditPostMutation>(EditPostDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'editPost');
+    },
+    editComment(variables: EditCommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<EditCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<EditCommentMutation>(EditCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'editComment');
+    },
+    deleteComment(variables: DeleteCommentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteCommentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteCommentMutation>(DeleteCommentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteComment');
     },
     logout(variables?: LogoutMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutation>(LogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'logout');
@@ -713,6 +891,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     profile(variables: ProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileQuery>(ProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'profile');
+    },
+    profileWithComments(variables: ProfileWithCommentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileWithCommentsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileWithCommentsQuery>(ProfileWithCommentsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'profileWithComments');
     }
   };
 }

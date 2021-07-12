@@ -1,28 +1,33 @@
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { sdk } from "../client";
+import { sdk } from "../utils/client";
 
 export default function Post(): JSX.Element {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
-  
+  const [is, setIs] = useState(false);
+
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (title.trim() == "" || body.trim() == "") {
-      setError("*please fill the form ");
-      return;
-    }
-    const res = await sdk.post({
-      title: title,
-      body: body,
-    });
+    if (!is) {
+      setIs(true);
+      if (title.trim() == "" || body.trim() == "") {
+        setError("*please fill the form ");
+        return;
+      }
+      const res = await sdk.post({
+        title: title,
+        body: body,
+      });
 
-    if (res.post.msg === "great") {
-      router.push("/");
-    } else {
-      setError("*" + res.post.msg);
+      if (res.post.msg === "great") {
+        router.push("/");
+      } else {
+        setError("*" + res.post.msg);
+        setIs(false);
+      }
     }
   };
 

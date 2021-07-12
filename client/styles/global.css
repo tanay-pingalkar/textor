@@ -10,6 +10,10 @@
   p {
     @apply font-rubik font-light text-xs dark:text-white;
   }
+
+  a {
+    @apply font-rubik font-light text-xs dark:text-white hover:underline;
+  }
   button {
     @apply px-3 bg-gray-300 hover:bg-black hover:text-white  hover:underline;
   }
@@ -19,4 +23,40 @@
   body {
     @apply h-screen;
   }
+}
+
+.mdlink {
+  @apply overflow-auto;
+}
+
+.mdlink a {
+  @apply font-bold underline;
+}
+
+.mdlink p {
+  @apply font-rubik text-sm font-medium sm:text-base break-all;
+}
+
+.mdlink h1 {
+  @apply font-rubik text-xl font-medium;
+}
+
+.mdlink pre {
+  @apply whitespace-pre-wrap text-sm;
+}
+
+.mdlink {
+  @apply pb-1;
+}
+
+.post p {
+  @apply font-thin text-sm sm:text-base break-words;
+}
+
+.post pre {
+  @apply whitespace-pre-wrap text-sm pb-1;
+}
+
+.post a {
+  @apply underline;
 }

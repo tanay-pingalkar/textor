@@ -7,6 +7,7 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany,
+  DeleteDateColumn,
 } from "typeorm";
 import { Comments } from "./comment";
 import { Downvotes, DownvotesComments } from "./downvote";
@@ -27,6 +28,9 @@ export class Users extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt = Date();
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @Field(() => String)
   @Column({ unique: true })

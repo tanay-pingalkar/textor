@@ -1,8 +1,8 @@
 import Link from "next/link";
 import React, { useContext } from "react";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
-import { sdk } from "../client";
-import { Ctx } from "../context";
+import { sdk } from "../utils/client";
+import { Ctx } from "../utils/context";
 
 const NavToggle: React.FC = () => {
   const { auth, name, setDark, dark, reputation, setAuth } = useContext(Ctx);
@@ -18,7 +18,7 @@ const NavToggle: React.FC = () => {
   return (
     <>
       {auth ? (
-        <div className="flex ">
+        <div className="flex flex-wrap justify-around">
           <DarkModeSwitch
             size={15}
             onChange={toggleLights}
@@ -26,22 +26,22 @@ const NavToggle: React.FC = () => {
             className="mt-3 mr-2"
           />
           <Link href="/">
-            <p className="mt-3 hover:underline">feed</p>
+            <a className="mt-3 hover:underline">feed</a>
           </Link>
           <Link href="/post">
-            <p className="font-light mt-3 pl-2 hover:underline ">post</p>
+            <a className="font-light mt-3 pl-2 hover:underline ">post</a>
           </Link>
           <Link href={`/profile/${name}`}>
-            <p
+            <a
               className={` mt-3 pl-2 hover:underline ${(() => {
                 if (name.split("").length > 7) return " w-14 truncate";
                 else "";
               })()} `}
             >
               {name + `(${reputation})`}
-            </p>
+            </a>
           </Link>
-          <p
+          <a
             className="mt-3 pl-2 hover:underline "
             onClick={async () => {
               await sdk.logout();
@@ -50,7 +50,7 @@ const NavToggle: React.FC = () => {
             }}
           >
             logout
-          </p>
+          </a>
         </div>
       ) : (
         <div className="flex ">
@@ -61,13 +61,13 @@ const NavToggle: React.FC = () => {
             className="mt-3 mr-2"
           />
           <Link href="/">
-            <p className="mt-3 hover:underline">feed</p>
+            <a className="mt-3 hover:underline">feed</a>
           </Link>
           <Link href="/login/">
-            <p className=" mt-3 pl-2 hover:underline">login</p>
+            <a className=" mt-3 pl-2 hover:underline">login</a>
           </Link>
           <Link href="/register">
-            <p className=" mt-3 pl-2 hover:underline">register</p>
+            <a className=" mt-3 pl-2 hover:underline">register</a>
           </Link>
         </div>
       )}

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { sdk } from "../client";
-import { Ctx } from "../context";
+import { sdk } from "../utils/client";
+import { Ctx } from "../utils/context";
 import Vote from "../svgs/vote";
 import Voted from "../svgs/voted";
 

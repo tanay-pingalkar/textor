@@ -1,8 +1,8 @@
 import { GraphQLClient } from "graphql-request";
-import { getSdk } from "./generated/graphql";
+import { getSdk } from "../generated/graphql";
 
 export const client = new GraphQLClient(
-  "https://textor-server.herokuapp.com/graphql" /*localhost:5000/graphq in developement*/,
+  process.env.NEXT_PUBLIC_URL /*localhost:5000/graphq in developement*/,
   {
     credentials: "include",
   }

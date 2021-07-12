@@ -1,0 +1,8 @@
+fragment basicComments on Comments {
+  id
+  body
+  me
+  upvoted
+  downvoted
+  totalVotes
+}

@@ -7,13 +7,22 @@ query profile($username: String!) {
       reputation
       email
       posts {
-        upvoted
-        downvoted
-        id
-        title
-        body
-        totalVotes
-        discussion
+        ...basicPost
+      }
+    }
+  }
+}
+
+query profileWithComments($username: String!) {
+  profile(username: $username) {
+    msg
+    me
+    user {
+      name
+      reputation
+      email
+      comments {
+        ...basicComments
       }
     }
   }

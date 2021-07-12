@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { sdk } from "../client";
+import { sdk } from "../utils/client";
 
 export default function Register(): JSX.Element {
   const [name, setName] = useState("");

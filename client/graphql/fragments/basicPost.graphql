@@ -1,0 +1,10 @@
+fragment basicPost on Posts {
+  id
+  title
+  body
+  me
+  upvoted
+  downvoted
+  totalVotes
+  discussion
+}
