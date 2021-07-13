@@ -18,7 +18,9 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
   const [reply, setReply] = useState(false);
   const [cbody, setCbody] = useState(comment.body);
   const [edit, setEdit] = useState(false);
+  const [children, setChildren] = useState(comment.children);
   const router = useRouter();
+
   const commentIt = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!auth) {
@@ -36,7 +38,8 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
         commentId: comment.id,
       });
       if (res.comment.msg === "great" && res.comment.comment) {
-        comment.children.unshift(res.comment.comment as unknown as Ctree);
+        res.comment.comment.me = true;
+        setChildren([res.comment.comment as unknown as Ctree, ...children]);
         setBody("");
         setReply(false);
       } else {
@@ -47,6 +50,7 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
       setError("oops something wrong with us");
     }
   };
+
   return (
     <div className="mt-2 ">
       <div className="px-5 pt-1 ">
@@ -102,7 +106,7 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
           <span className="flex flex-wrap">
             {comment.me ? (
               <>
-                <a onClick={() => setEdit(true)}>edit</a>
+                <a onClick={() => setEdit(!edit)}>edit</a>
                 <p
                   className="hover:underline ml-3"
                   onClick={async () => {
@@ -154,9 +158,9 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
         )}
       </div>
 
-      {comment.children.map((child) => (
+      {children.map((child) => (
         <div className="ml-5 border-l-2 ">
-          <Comment comment={child} postId={postId} />
+          <Comment comment={child} postId={postId} key={child.id} />
         </div>
       ))}
     </div>

@@ -326,11 +326,12 @@ export type CommentMutation = (
     & Pick<CommentResponse, 'msg'>
     & { comment?: Maybe<(
       { __typename?: 'Comments' }
-      & Pick<Comments, 'id' | 'body' | 'parent' | 'children' | 'totalVotes'>
+      & Pick<Comments, 'children' | 'parent'>
       & { user: (
         { __typename?: 'Users' }
         & Pick<Users, 'name'>
       ) }
+      & BasicCommentsFragment
     )> }
   ) }
 );
@@ -651,18 +652,16 @@ export const CommentDocument = gql`
   comment(commentInfo: {postId: $postId, body: $body, commentId: $commentId}) {
     msg
     comment {
-      id
-      body
-      parent
+      ...basicComments
       children
-      totalVotes
+      parent
       user {
         name
       }
     }
   }
 }
-    `;
+    ${BasicCommentsFragmentDoc}`;
 export const DownvoteDocument = gql`
     mutation downvote($postId: String!) {
   downvote(postId: $postId) {

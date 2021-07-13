@@ -5,7 +5,6 @@ import { ProfileWithCommentsQuery } from "../../../generated/graphql";
 const Home: React.FC<ProfileWithCommentsQuery> = ({
   profile: { msg, me, user },
 }) => {
-  console.log(user);
   return (
     <div>
       {msg === "great" ? (

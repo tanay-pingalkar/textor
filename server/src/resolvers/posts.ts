@@ -207,6 +207,7 @@ export class posts {
     const post = await Posts.findOne(postId, { relations: ["user"] });
 
     post.comment = await Comments.createQueryBuilder()
+      .where("p.id = :postId", { postId: postId })
       .leftJoinAndMapOne(
         "Comments.user",
         "users",
@@ -221,7 +222,6 @@ export class posts {
       )
       .loadRelationIdAndMap("children", "Comments.children")
       .loadRelationIdAndMap("parent", "Comments.parent")
-      .where("p.id = :postId", { postId: postId })
       .getMany();
 
     if (userId) {
@@ -234,6 +234,7 @@ export class posts {
         await comment.isUpvoted(userId);
       }
     }
+
     return post;
   }
 

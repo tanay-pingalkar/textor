@@ -24,7 +24,9 @@ const Post: React.FC<props> = ({ post }) => {
   const [error, setError] = useState("");
   const { auth, isMobile, dark } = useContext(Ctx);
   const router = useRouter();
+  const [comments, setComments] = useState(post.comment);
   const [edit, setEdit] = useState(false);
+
   const comment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!auth) {
@@ -41,7 +43,9 @@ const Post: React.FC<props> = ({ post }) => {
         postId: post.id,
       });
       if (comment.msg === "great" && comment.comment) {
-        post.comment.unshift(comment.comment as unknown as Ctree);
+        // com.unshift(comment.comment as unknown as Ctree);
+        comment.comment.me = true;
+        setComments([comment.comment as unknown as Ctree, ...comments]);
         setBody("");
       } else {
         setError(`*${comment.msg}`);
@@ -169,6 +173,7 @@ const Post: React.FC<props> = ({ post }) => {
           <form className="px-5" onSubmit={comment}>
             <h1>Add comment</h1>
             <textarea
+              value={body}
               className={`${isMobile ? " w-full " : "w-80 h-24 resize"}`}
               onChange={(e) => setBody(e.target.value)}
             ></textarea>
@@ -176,9 +181,12 @@ const Post: React.FC<props> = ({ post }) => {
             <p className="text-red">{error}</p>
             <button>Submit</button>
           </form>
-
-          {post.comment.map((comment) => (
-            <Comment comment={comment} postId={post.id} />
+          {comments.map((comment) => (
+            <Comment
+              postId={post.id}
+              comment={comment}
+              key={comment.id}
+            ></Comment>
           ))}
         </div>
       </div>

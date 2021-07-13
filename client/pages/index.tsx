@@ -15,7 +15,6 @@ const Home: React.FC<props> = ({ feed }) => {
   return (
     <>
       <Head>
-        <title>Textor</title>
         <meta name="description" content="a platform for serious discussions" />
       </Head>
 
@@ -37,7 +36,6 @@ const Home: React.FC<props> = ({ feed }) => {
         <button
           className="ml-5 mt-2 mb-2"
           onClick={async () => {
-            console.log(posts[posts.length - 1].id);
             const { feed } = await sdk.feed({
               lastPostId: posts[posts.length - 1].id.toString(),
             });

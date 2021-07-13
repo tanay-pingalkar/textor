@@ -4,11 +4,9 @@ mutation comment($postId: String!, $body: String!, $commentId: String) {
   ) {
     msg
     comment {
-      id
-      body
-      parent
+      ...basicComments
       children
-      totalVotes
+      parent
       user {
         name
       }

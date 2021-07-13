@@ -57,7 +57,7 @@ export class users {
       registerInfo.password = await argon2.hash(registerInfo.password);
       const user = await Users.create(registerInfo).save();
       const token = jwtgen(user.id);
-      console.log(cookieConfig);
+
       res.cookie("token", token, cookieConfig);
       return {
         msg: "great",
