@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { sdk } from "../utils/client";
+import Head from "next/head";
 
 export default function Post(): JSX.Element {
   const router = useRouter();
@@ -32,19 +33,26 @@ export default function Post(): JSX.Element {
   };
 
   return (
-    <form className=" w-24 m-5" onSubmit={formSubmit}>
-      <input
-        placeholder="title"
-        className="pl-2 rounded-sm"
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        className=" h-48 w-64 mt-5 pl-2"
-        placeholder="body"
-        onChange={(e) => setBody(e.target.value)}
-      ></textarea>
-      <p className="text-red-700 mt-3 -mb-2 w-64">{error}</p>
-      <button className="mt-3">submit</button>
-    </form>
+    <>
+      <Head>
+        <title>Textor</title>
+        <meta name="description" content="post something meaningfull" />
+      </Head>
+
+      <form className=" w-24 m-5" onSubmit={formSubmit}>
+        <input
+          placeholder="title"
+          className="pl-2 rounded-sm"
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          className=" h-48 w-64 mt-5 pl-2"
+          placeholder="body"
+          onChange={(e) => setBody(e.target.value)}
+        ></textarea>
+        <p className="text-red-700 mt-3 -mb-2 w-64">{error}</p>
+        <button className="mt-3">submit</button>
+      </form>
+    </>
   );
 }

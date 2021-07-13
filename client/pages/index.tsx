@@ -15,6 +15,7 @@ const Home: React.FC<props> = ({ feed }) => {
   return (
     <>
       <Head>
+        <title>Textor</title>
         <meta name="description" content="a platform for serious discussions" />
       </Head>
 

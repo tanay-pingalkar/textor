@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { sdk } from "../utils/client";
+import Head from "next/head";
 
 export default function Register(): JSX.Element {
   const [name, setName] = useState("");
@@ -37,28 +38,38 @@ export default function Register(): JSX.Element {
   };
 
   return (
-    <form className="m-5 w-20" onSubmit={formSubmit}>
-      <input
-        placeholder="name"
-        className="pl-2 rounded-sm"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value.replace(/\s/g, "-"));
-        }}
-      />
-      <input
-        placeholder="email"
-        className="pl-2 mt-5 rounded-sm"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        placeholder="password"
-        className="pl-2 mt-5 rounded-sm "
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <p className="text-red-700 mt-3 -mb-2 w-64">{error}</p>
-      <button className="mt-5">submit</button>
-    </form>
+    <>
+      <Head>
+        <title>Textor</title>
+        <meta
+          name="description"
+          content="register to textor and join the wonderfull community"
+        />
+      </Head>
+
+      <form className="m-5 w-20" onSubmit={formSubmit}>
+        <input
+          placeholder="name"
+          className="pl-2 rounded-sm"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value.replace(/\s/g, "-"));
+          }}
+        />
+        <input
+          placeholder="email"
+          className="pl-2 mt-5 rounded-sm"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          placeholder="password"
+          className="pl-2 mt-5 rounded-sm "
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <p className="text-red-700 mt-3 -mb-2 w-64">{error}</p>
+        <button className="mt-5">submit</button>
+      </form>
+    </>
   );
 }

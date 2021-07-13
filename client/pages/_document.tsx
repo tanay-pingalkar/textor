@@ -16,7 +16,6 @@ class MyDocument extends Document {
   render(): JSX.Element {
     return (
       <Html>
-        <title>Textor</title>
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="icon" href="/logo.svg" type="image/svg"></link>
