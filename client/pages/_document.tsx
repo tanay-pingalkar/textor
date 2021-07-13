@@ -17,11 +17,8 @@ class MyDocument extends Document {
     return (
       <Html>
         <title>Textor</title>
+        <meta name="description" content="a platform for serious discussions" />
         <Head>
-          <meta
-            name="description"
-            content="a platform for serious discussions"
-          />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="icon" href="/logo.svg" type="image/svg"></link>
           <link

@@ -15,7 +15,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
         <meta name="author" content={user.name} />
         <meta
           name="description"
-          content={`profile of ${user.name}\nwith ${user.reputation} reputation\nposted ${user.posts.length} posts`}
+          content={`profile name : ${user.name}\nreputation : ${user.reputation}\ntotal posts : ${user.posts.length}`}
         />
       </Head>
       <div>

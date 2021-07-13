@@ -59,7 +59,7 @@ const Post: React.FC<props> = ({ post }) => {
         <meta name="author" content={post.user.name} />
         <meta
           name="description"
-          content={`title : ${post.title}\n upvotes : ${post.upvotes}\n comments : ${post.discussion}`}
+          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
         />
       </Head>
       <div className="">
