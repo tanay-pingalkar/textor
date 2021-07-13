@@ -4,6 +4,7 @@ import { useState } from "react";
 import { sdk } from "../utils/client";
 import Post from "../components/post";
 import { Posts } from "../generated/graphql";
+import Head from "next/head";
 
 interface props {
   feed: Posts[];

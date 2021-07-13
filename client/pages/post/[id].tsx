@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { Comments } from "../../generated/graphql";
 import ReactMarkdown from "react-markdown";
 import { syntaxComponents } from "../../utils/syntaxComponent";
+import Head from "next/head";
 
 interface props {
   post: Ptree;
@@ -51,126 +52,134 @@ const Post: React.FC<props> = ({ post }) => {
     }
   };
   return (
-    <div className="">
-      <div className=" border-b-2 px-5 pt-2">
-        {edit ? (
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const res = await sdk.editPost({
-                postId: Number(post.id),
-                title: title,
-                body: nbody,
-              });
-              if (res.edit.msg === "great") {
-                setTitle(res.edit.post.title);
-                setNbody(res.edit.post.body);
-                setEdit(false);
-              } else {
-                alert(res.edit.msg);
-              }
-            }}
-          >
-            <h1 className=" text-xl">Edit</h1>
-            <input
-              value={title}
-              className="w-full"
-              onChange={(e) => setTitle(e.target.value)}
-            ></input>
-            <br />
+    <>
+      <Head>
+        <title>Textor</title>
+        <meta name="keywords" content={post.body} />
+        <meta name="author" content={post.user.name} />
+        <meta name="description" content={post.title} />
+      </Head>
+      <div className="">
+        <div className=" border-b-2 px-5 pt-2">
+          {edit ? (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const res = await sdk.editPost({
+                  postId: Number(post.id),
+                  title: title,
+                  body: nbody,
+                });
+                if (res.edit.msg === "great") {
+                  setTitle(res.edit.post.title);
+                  setNbody(res.edit.post.body);
+                  setEdit(false);
+                } else {
+                  alert(res.edit.msg);
+                }
+              }}
+            >
+              <h1 className=" text-xl">Edit</h1>
+              <input
+                value={title}
+                className="w-full"
+                onChange={(e) => setTitle(e.target.value)}
+              ></input>
+              <br />
+              <textarea
+                value={nbody}
+                className="w-full h-24 mt-2"
+                onChange={(e) => setNbody(e.target.value)}
+              ></textarea>
+              <br />
+              <button className="mb-1">submit</button>
+            </form>
+          ) : (
+            <>
+              <div className="flex justify-between">
+                <h1 className="text-lg sm:text-xl font-medium w-full break-all">
+                  {title}
+                </h1>
+                <Link href={`/profile/${post.user.name}`}>
+                  <p className="hover:underline">posted by {post.user.name}</p>
+                </Link>
+              </div>
+              <div className="post">
+                <ReactMarkdown
+                  skipHtml={true}
+                  allowedElements={["p", "a", "code", "pre"]}
+                  linkTarget="_blank"
+                  components={syntaxComponents(dark)}
+                >
+                  {nbody}
+                </ReactMarkdown>
+              </div>
+            </>
+          )}
+
+          <span className="flex justify-between">
+            <Votes
+              Upvoted={post.upvoted}
+              Downvoted={post.downvoted}
+              Votes={post.totalVotes}
+              postId={post.id}
+            ></Votes>
+            {post.me ? (
+              <div className="flex flex-wrap">
+                <a
+                  className=" hover:underline ml-3"
+                  onClick={() => setEdit(!edit)}
+                >
+                  edit
+                </a>
+                <a
+                  className=" hover:underline ml-3"
+                  onClick={async () => {
+                    const con = confirm("are you sure");
+                    if (!con) {
+                      return;
+                    }
+                    try {
+                      const res = await sdk.deletePost({
+                        postId: Number(post.id),
+                      });
+                      if (res.delete === "great") {
+                        router.reload();
+                      } else {
+                        alert("sorry cannot delete");
+                      }
+                    } catch (err) {
+                      console.log(err);
+                      alert("unusual error");
+                    }
+                  }}
+                >
+                  delete
+                </a>
+              </div>
+            ) : (
+              <></>
+            )}
+          </span>
+        </div>
+        <div className="mt-3 ">
+          <form className="px-5" onSubmit={comment}>
+            <h1>Add comment</h1>
             <textarea
-              value={nbody}
-              className="w-full h-24 mt-2"
-              onChange={(e) => setNbody(e.target.value)}
+              className={`${isMobile ? " w-full " : "w-80 h-24 resize"}`}
+              onChange={(e) => setBody(e.target.value)}
             ></textarea>
             <br />
-            <button className="mb-1">submit</button>
+            <p className="text-red">{error}</p>
+            <button>Submit</button>
           </form>
-        ) : (
-          <>
-            <div className="flex justify-between">
-              <h1 className="text-lg sm:text-xl font-medium w-full break-all">
-                {title}
-              </h1>
-              <Link href={`/profile/${post.user.name}`}>
-                <p className="hover:underline">posted by {post.user.name}</p>
-              </Link>
-            </div>
-            <div className="post">
-              <ReactMarkdown
-                skipHtml={true}
-                allowedElements={["p", "a", "code", "pre"]}
-                linkTarget="_blank"
-                components={syntaxComponents(dark)}
-              >
-                {nbody}
-              </ReactMarkdown>
-            </div>
-          </>
-        )}
 
-        <span className="flex justify-between">
-          <Votes
-            Upvoted={post.upvoted}
-            Downvoted={post.downvoted}
-            Votes={post.totalVotes}
-            postId={post.id}
-          ></Votes>
-          {post.me ? (
-            <div className="flex flex-wrap">
-              <a
-                className=" hover:underline ml-3"
-                onClick={() => setEdit(!edit)}
-              >
-                edit
-              </a>
-              <a
-                className=" hover:underline ml-3"
-                onClick={async () => {
-                  const con = confirm("are you sure");
-                  if (!con) {
-                    return;
-                  }
-                  try {
-                    const res = await sdk.deletePost({
-                      postId: Number(post.id),
-                    });
-                    if (res.delete === "great") {
-                      router.reload();
-                    } else {
-                      alert("sorry cannot delete");
-                    }
-                  } catch (err) {
-                    console.log(err);
-                    alert("unusual error");
-                  }
-                }}
-              >
-                delete
-              </a>
-            </div>
-          ) : (
-            <></>
-          )}
-        </span>
+          {post.comment.map((comment) => (
+            <Comment comment={comment} postId={post.id} />
+          ))}
+        </div>
       </div>
-      <div className="mt-3 ">
-        <form className="px-5" onSubmit={comment}>
-          <h1>Add comment</h1>
-          <textarea
-            className={`${isMobile ? " w-full " : "w-80 h-24 resize"}`}
-            onChange={(e) => setBody(e.target.value)}
-          ></textarea>
-          <br />
-          <p className="text-red">{error}</p>
-          <button>Submit</button>
-        </form>
-
-        {post.comment.map((comment) => (
-          <Comment comment={comment} postId={post.id} />
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -8,7 +8,10 @@
     "format": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "eslint .",
-    "heroku-postbuild": "cd server && yarn "
+    "heroku-postbuild": "cd server && yarn ",
+    "client:dev":"cd client && yarn dev",
+    "server:watch":"cd server && yarn watch",
+    "server:dev":"cd server && yarn dev"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.25.0",

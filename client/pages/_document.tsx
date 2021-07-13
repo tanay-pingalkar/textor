@@ -18,6 +18,10 @@ class MyDocument extends Document {
       <Html>
         <title>Textor</title>
         <Head>
+          <meta
+            name="description"
+            content="a platform for serious discussions"
+          />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="icon" href="/logo.svg" type="image/svg"></link>
           <link
