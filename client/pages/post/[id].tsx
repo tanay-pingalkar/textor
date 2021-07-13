@@ -57,7 +57,10 @@ const Post: React.FC<props> = ({ post }) => {
         <title>Textor</title>
         <meta name="keywords" content={post.body} />
         <meta name="author" content={post.user.name} />
-        <meta name="description" content={post.title} />
+        <meta
+          name="description"
+          content={`title : ${post.title}\n upvotes : ${post.upvotes}\n comments : ${post.discussion}`}
+        />
       </Head>
       <div className="">
         <div className=" border-b-2 px-5 pt-2">

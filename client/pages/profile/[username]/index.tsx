@@ -9,13 +9,13 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
     <>
       <Head>
         <title>
-          {user.name}({user.reputation}) textor profile
+          {user.name}({user.reputation})
         </title>
         <meta name="keywords" content={user.name} />
         <meta name="author" content={user.name} />
         <meta
           name="description"
-          content={"profile of " + user.name + "\n" + "with " + user.reputation}
+          content={`profile of ${user.name}\nwith ${user.reputation} reputation\nposted ${user.posts.length} posts`}
         />
       </Head>
       <div>
