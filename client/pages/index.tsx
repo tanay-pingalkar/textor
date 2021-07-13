@@ -13,34 +13,41 @@ const Home: React.FC<props> = ({ feed }) => {
   const [posts, setPosts] = useState<Posts[]>(feed);
 
   return (
-    <div>
-      {posts.map((post, key) => (
-        <Post
-          title={post.title}
-          body={post.body}
-          user={post.user.name}
-          votes={post.totalVotes}
-          upvoted={post.upvoted}
-          downvoted={post.downvoted}
-          key={key}
-          postId={post.id}
-          discussion={post.discussion}
-          me={post.me}
-        ></Post>
-      ))}
-      <button
-        className="ml-5 mt-2 mb-2"
-        onClick={async () => {
-          console.log(posts[posts.length - 1].id);
-          const { feed } = await sdk.feed({
-            lastPostId: posts[posts.length - 1].id.toString(),
-          });
-          setPosts(posts.concat(feed as Posts[]));
-        }}
-      >
-        more
-      </button>
-    </div>
+    <>
+      <Head>
+        <title>Textor</title>
+        <meta name="description" content="a platform for serious discussions" />
+      </Head>
+
+      <div>
+        {posts.map((post, key) => (
+          <Post
+            title={post.title}
+            body={post.body}
+            user={post.user.name}
+            votes={post.totalVotes}
+            upvoted={post.upvoted}
+            downvoted={post.downvoted}
+            key={key}
+            postId={post.id}
+            discussion={post.discussion}
+            me={post.me}
+          ></Post>
+        ))}
+        <button
+          className="ml-5 mt-2 mb-2"
+          onClick={async () => {
+            console.log(posts[posts.length - 1].id);
+            const { feed } = await sdk.feed({
+              lastPostId: posts[posts.length - 1].id.toString(),
+            });
+            setPosts(posts.concat(feed as Posts[]));
+          }}
+        >
+          more
+        </button>
+      </div>
+    </>
   );
 };
 
