@@ -258,4 +258,36 @@ export class posts {
       return "post not found";
     }
   }
+
+  @Query(() => [Posts])
+  async search(
+    @Arg("query") query: string,
+    @Ctx() { userId }: MyContext
+  ): Promise<Array<Posts>> {
+    try {
+      const posts = await Posts.createQueryBuilder()
+        .leftJoinAndMapMany(
+          "Posts.comment",
+          "comments",
+          "c",
+          "c.postId= Posts.id"
+        )
+        .leftJoinAndMapOne("Posts.user", "users", "u", "u.id = Posts.userId")
+        .where("title ILIKE :query", { query: `%${query}%` })
+        .orWhere("Posts.body ILIKE :query", { query: `%${query}%` })
+        .getMany();
+
+      if (userId) {
+        for (const post of posts) {
+          post.isDownvoted(userId);
+          post.isUpvoted(userId);
+          post.setMe(userId);
+        }
+      }
+      return posts;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
 }

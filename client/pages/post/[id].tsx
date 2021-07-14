@@ -65,6 +65,15 @@ const Post: React.FC<props> = ({ post }) => {
           name="description"
           content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
         />
+        <meta
+          name="twitter:card"
+          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
+        />
+        <meta property="og:title" content="Textor" />
+        <meta
+          property="og:description"
+          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
+        />
       </Head>
       <div className="">
         <div className=" border-b-2 px-5 pt-2">

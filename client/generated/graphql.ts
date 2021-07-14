@@ -154,6 +154,7 @@ export type Query = {
   profile: ProfileResponse;
   feed: Array<Posts>;
   getPost: Posts;
+  search: Array<Posts>;
   thread: Array<Comments>;
 };
 
@@ -175,6 +176,11 @@ export type QueryFeedArgs = {
 
 export type QueryGetPostArgs = {
   postId: Scalars['Float'];
+};
+
+
+export type QuerySearchArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -607,6 +613,23 @@ export type ProfileWithCommentsQuery = (
   ) }
 );
 
+export type SearchQueryVariables = Exact<{
+  query: Scalars['String'];
+}>;
+
+
+export type SearchQuery = (
+  { __typename?: 'Query' }
+  & { search: Array<(
+    { __typename?: 'Posts' }
+    & { user: (
+      { __typename?: 'Users' }
+      & Pick<Users, 'name'>
+    ) }
+    & BasicPostFragment
+  )> }
+);
+
 export const BasicCommentsFragmentDoc = gql`
     fragment basicComments on Comments {
   id
@@ -829,6 +852,16 @@ export const ProfileWithCommentsDocument = gql`
   }
 }
     ${BasicCommentsFragmentDoc}`;
+export const SearchDocument = gql`
+    query search($query: String!) {
+  search(query: $query) {
+    ...basicPost
+    user {
+      name
+    }
+  }
+}
+    ${BasicPostFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -893,6 +926,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     profileWithComments(variables: ProfileWithCommentsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileWithCommentsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileWithCommentsQuery>(ProfileWithCommentsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'profileWithComments');
+    },
+    search(variables: SearchQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchQuery>(SearchDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'search');
     }
   };
 }

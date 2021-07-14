@@ -17,6 +17,10 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
           name="description"
           content={`profile name : ${user.name}\nreputation : ${user.reputation}\ntotal posts : ${user.posts.length}`}
         />
+        <meta
+          name="twitter:card"
+          content={`profile name : ${user.name}\nreputation : ${user.reputation}\ntotal posts : ${user.posts.length}`}
+        ></meta>
       </Head>
       <div>
         {msg === "great" ? (

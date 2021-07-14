@@ -10,6 +10,7 @@ function MyApp({ Component, pageProps }): JSX.Element {
   const [isMobile, setMobile] = useState(false);
   const [name, setName] = useState("");
   const [reputation, setReputation] = useState(0);
+  const [last, setLast] = useState("/");
 
   return (
     <Ctx.Provider
@@ -24,6 +25,8 @@ function MyApp({ Component, pageProps }): JSX.Element {
         reputation,
         isMobile,
         setMobile,
+        last,
+        setLast,
       }}
     >
       <Nav>

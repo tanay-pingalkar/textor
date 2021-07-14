@@ -20,6 +20,7 @@ const Nav: React.FC<props> = (props) => {
     setReputation,
     setMobile,
     isMobile,
+    setLast,
   } = useContext(Ctx);
 
   if (typeof window != "undefined") {
@@ -55,20 +56,26 @@ const Nav: React.FC<props> = (props) => {
   switch (router.pathname) {
     case "/":
       where = "Feed";
+      setLast(router.asPath);
       break;
     case "/login":
       where = "Login";
+      setLast(router.asPath);
       break;
     case "/register":
       where = "Register";
+      setLast(router.asPath);
       break;
     default:
       if (router.pathname.includes("profile")) {
         where = "Profile";
+        console.log(router.asPath);
+        setLast(router.asPath);
       } else if (router.pathname.includes("search")) {
         where = "Search";
       } else if (router.pathname.includes("post")) {
         where = "Post ";
+        setLast(router.asPath);
       } else {
         where = "Hmm";
       }

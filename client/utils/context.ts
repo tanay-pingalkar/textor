@@ -11,4 +11,6 @@ export const Ctx = createContext<{
   setDark?: Dispatch<SetStateAction<boolean>>;
   isMobile?: boolean;
   setMobile?: Dispatch<SetStateAction<boolean>>;
+  last?: string;
+  setLast?: Dispatch<SetStateAction<string>>;
 }>({});

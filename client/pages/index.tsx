@@ -17,6 +17,15 @@ const Home: React.FC<props> = ({ feed }) => {
       <Head>
         <title>Textor</title>
         <meta name="description" content="a platform for serious discussions" />
+        <meta
+          name="twitter:card"
+          content="a platform for serious discussions"
+        />
+        <meta property="og:title" content="Textor" />
+        <meta
+          property="og:description"
+          content="a platform for serious discussion"
+        />
       </Head>
 
       <div>
