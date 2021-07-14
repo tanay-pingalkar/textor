@@ -18,6 +18,7 @@ const MobileNav: React.FC<props> = ({ where }) => {
         <input
           className="h-6 pl-1 w-full "
           placeholder="search"
+          value={router.query.query}
           onChange={(e) => {
             if (e.target.value.trim() !== "") {
               router.replace(`/search/${e.target.value}`);

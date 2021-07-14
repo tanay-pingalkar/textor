@@ -16,6 +16,7 @@ const MainNav: React.FC<props> = ({ where }) => {
       <input
         className="h-7 border-gray-900 mt-1 dark:bg-gray-100"
         placeholder="search"
+        value={router.asPath.match(/search/g) ? router.query.query : ""}
         onChange={(e) => {
           if (e.target.value.trim() !== "") {
             router.replace(`/search/${e.target.value}`);

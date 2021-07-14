@@ -7,18 +7,18 @@ import Post from "../../components/post";
 
 const Search: React.FC<{ search: Array<Posts> }> = ({ search }) => {
   const router = useRouter();
-  console.log(search);
+  console.log(router.query);
   return (
     <>
       <Head>
         <title>Search</title>
         <meta
           name="description"
-          content={`${search.length} results for ${router.query}`}
+          content={`${search.length} results for ${router.query.query}`}
         />
         <meta
           name="twitter:card"
-          content={`${search.length} results for ${router.query}`}
+          content={`${search.length} results for ${router.query.query}`}
         ></meta>
       </Head>
       <div>
