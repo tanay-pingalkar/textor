@@ -10,7 +10,7 @@ interface props {
 const MainNav: React.FC<props> = ({ where }) => {
   const router = useRouter();
   const { last } = useContext(Ctx);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(router.query.query);
   return (
     <div className="flex justify-between  border-b-2 px-5 py-1 ">
       <h1 className="font-bold text-2xl tracking-widest mt-1">{where}</h1>
