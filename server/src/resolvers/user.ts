@@ -163,7 +163,7 @@ export class users {
           await post.isUpvoted(user.id);
           await post.isDownvoted(user.id);
         }
-        for (const comment of user.posts) {
+        for (const comment of user.comments) {
           await comment.isUpvoted(user.id);
           await comment.isDownvoted(user.id);
         }
