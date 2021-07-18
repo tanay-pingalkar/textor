@@ -607,6 +607,10 @@ export type ProfileWithCommentsQuery = (
       & Pick<Users, 'name' | 'reputation' | 'email'>
       & { comments: Array<(
         { __typename?: 'Comments' }
+        & { post: (
+          { __typename?: 'Posts' }
+          & Pick<Posts, 'id'>
+        ) }
         & BasicCommentsFragment
       )> }
     )> }
@@ -847,6 +851,9 @@ export const ProfileWithCommentsDocument = gql`
       email
       comments {
         ...basicComments
+        post {
+          id
+        }
       }
     }
   }

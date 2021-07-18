@@ -5,7 +5,7 @@ import React, { FormEvent, useContext, useState } from "react";
 import Link from "next/link";
 import Votes from "../../components/votes";
 import { Ctree, Ptree } from "../../utils/types";
-import Comment from "../../components/comment";
+import Comment from "../../components/comments";
 import { Ctx } from "../../utils/context";
 import { useRouter } from "next/router";
 import { Comments } from "../../generated/graphql";

@@ -34,7 +34,7 @@
 }
 
 .mdlink p {
-  @apply font-rubik text-sm font-medium sm:text-base break-all;
+  @apply font-rubik font-medium sm:text-base break-all;
 }
 
 .mdlink h1 {

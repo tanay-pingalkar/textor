@@ -60,7 +60,7 @@ const Post: React.FC<props> = ({
             value={ntitle}
             className="w-full"
             onChange={(e) => setTitle(e.target.value)}
-          ></input>{" "}
+          ></input>
           <br />
           <textarea
             value={nbody}
@@ -73,7 +73,7 @@ const Post: React.FC<props> = ({
       ) : (
         <>
           <div className="flex justify-between ">
-            <h1 className="text-lg sm:text-xl font-medium truncate w-4/5 sm:w-10/12">
+            <h1 className=" sm:text-xl text-lg  font-medium truncate w-4/5 sm:w-10/12">
               {ntitle}
             </h1>
             <Link href={`/profile/${user}`}>

@@ -153,9 +153,11 @@ export class users {
           "Users.comments",
           "comments",
           "co",
-          "Users.id=co.id"
+          "Users.id=co.userId"
         )
+        .leftJoinAndMapOne("co.post", "posts", "cp", "cp.id=co.postId")
         .getOne();
+      console.log(user);
       if (user) {
         for (const post of user.posts) {
           await post.isUpvoted(user.id);

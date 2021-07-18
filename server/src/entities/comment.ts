@@ -60,7 +60,7 @@ export class Comments extends BaseEntity {
   @Column({ nullable: false, type: "float", default: 0.0 })
   totalVotes: number;
 
-  @Field(() => Posts)
+  @Field(() => Posts, { nullable: true })
   @ManyToOne(() => Posts, (post) => post.comment)
   post: Posts;
 

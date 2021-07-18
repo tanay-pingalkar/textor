@@ -23,6 +23,9 @@ query profileWithComments($username: String!) {
       email
       comments {
         ...basicComments
+        post {
+          id
+        }
       }
     }
   }
