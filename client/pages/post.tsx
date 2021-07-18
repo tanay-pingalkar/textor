@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useContext } from "react";
 import { sdk } from "../utils/client";
 import Head from "next/head";
+import { Ctx } from "../utils/context";
 
 export default function Post(): JSX.Element {
   const router = useRouter();
@@ -9,6 +10,8 @@ export default function Post(): JSX.Element {
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
   const [is, setIs] = useState(false);
+  const { isMobile } = useContext(Ctx);
+  console.log(isMobile);
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,17 +42,21 @@ export default function Post(): JSX.Element {
         <meta name="description" content="post something meaningfull" />
       </Head>
 
-      <form className=" w-24 m-5" onSubmit={formSubmit}>
+      <form className=" m-5" onSubmit={formSubmit}>
         <input
           placeholder="title"
-          className="pl-2 rounded-sm"
+          className={`pl-2 rounded-sm ${!isMobile ? "w-64" : " w-full"}`}
           onChange={(e) => setTitle(e.target.value)}
         />
+        <br />
         <textarea
-          className=" h-48 w-64 mt-5 pl-2"
+          className={`h-48 ${
+            !isMobile ? "w-64" : "w-full"
+          } mt-5 pl-2 rounded-sm`}
           placeholder="body"
           onChange={(e) => setBody(e.target.value)}
         ></textarea>
+        <br />
         <p className="text-red-700 mt-3 -mb-2 w-64">{error}</p>
         <button className="mt-3">submit</button>
       </form>
