@@ -45,14 +45,12 @@ export default function Post(): JSX.Element {
       <form className=" m-5" onSubmit={formSubmit}>
         <input
           placeholder="title"
-          className={`pl-2 rounded-sm ${!isMobile ? "w-64" : " w-full"}`}
+          className={`pl-2  ${!isMobile ? "w-64" : " w-full"}`}
           onChange={(e) => setTitle(e.target.value)}
         />
         <br />
         <textarea
-          className={`h-48 ${
-            !isMobile ? "w-64" : "w-full"
-          } mt-5 pl-2 rounded-sm`}
+          className={`h-48 ${!isMobile ? "w-64" : "w-full"} mt-5 pl-2 `}
           placeholder="body"
           onChange={(e) => setBody(e.target.value)}
         ></textarea>

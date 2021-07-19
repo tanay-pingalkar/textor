@@ -33,7 +33,7 @@ const Post: React.FC<props> = ({
   const [nbody, setBody] = useState(body);
   const [edit, setEdit] = useState(false);
   return (
-    <div className="px-5 pt-1 border-b-2  ">
+    <div className="px-5 pt-1 border-b-2">
       {edit ? (
         <form
           onSubmit={async (e) => {

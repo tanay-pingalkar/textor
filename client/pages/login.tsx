@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { sdk } from "../utils/client";
 import Head from "next/head";
+import { Ctx } from "../utils/context";
 export default function Login(): JSX.Element {
   const [password, setPassword] = useState("");
   const [nameOrEmail, setNameOrEmail] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { isMobile } = useContext(Ctx);
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,18 +46,19 @@ export default function Login(): JSX.Element {
         />
       </Head>
 
-      <form className="m-5 w-20" onSubmit={formSubmit}>
+      <form className="m-5 " onSubmit={formSubmit}>
         <input
           placeholder="name or email"
-          className="pl-2 rounded-sm"
+          className={`pl-2 ${isMobile ? "w-full" : ""}`}
           value={nameOrEmail}
           onChange={(e) => {
             setNameOrEmail(e.target.value.replace(/\s/g, "-"));
           }}
         ></input>
+        <br></br>
         <input
           placeholder="password"
-          className="pl-2 mt-5 rounded-sm "
+          className={`pl-2 mt-5 rounded-sm ${isMobile ? "w-full" : ""}`}
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         ></input>

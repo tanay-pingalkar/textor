@@ -183,7 +183,7 @@ const Post: React.FC<props> = ({ post }) => {
             <h1>Add comment</h1>
             <textarea
               value={body}
-              className={`${isMobile ? " w-full " : "w-80 h-24 resize"}`}
+              className={`${isMobile ? " w-full" : "w-80"} h-24 resize `}
               onChange={(e) => setBody(e.target.value)}
             ></textarea>
             <br />

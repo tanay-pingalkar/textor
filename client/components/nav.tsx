@@ -89,7 +89,7 @@ const Nav: React.FC<props> = (props) => {
         className="w-screen h-screen  bg-white dark:bg-gray-800 overflow-y-scroll "
         {...props}
       >
-        <div className="bg-gray-200 h-screen w-screen sm:w-3/4 sm:m-auto dark:bg-gray-700">
+        <div className="bg-gray-200 h-screen w-screen sm:w-4/6 sm:m-auto dark:bg-gray-700">
           <div>
             <h1 className="sm:tracking-smExtreme tracking-midExtreme font-extrabold text-3xl text-center border-b-2 p-1">
               Textor

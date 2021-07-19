@@ -50,7 +50,7 @@ export default function Register(): JSX.Element {
       <form className="m-5 w-20" onSubmit={formSubmit}>
         <input
           placeholder="name"
-          className="pl-2 rounded-sm"
+          className="pl-2 "
           value={name}
           onChange={(e) => {
             setName(e.target.value.replace(/\s/g, "-"));
@@ -58,12 +58,12 @@ export default function Register(): JSX.Element {
         />
         <input
           placeholder="email"
-          className="pl-2 mt-5 rounded-sm"
+          className="pl-2 mt-5 "
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           placeholder="password"
-          className="pl-2 mt-5 rounded-sm "
+          className="pl-2 mt-5  "
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         />

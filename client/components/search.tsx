@@ -9,7 +9,7 @@ const Search = (): JSX.Element => {
 
   return (
     <input
-      className={`h-7 border-gray-900 mt-1 dark:bg-gray-100 rounded-sm pl-2 ${
+      className={`h-7 border-gray-900 mt-1 dark:bg-gray-100  pl-2 ${
         isMobile ? "w-full" : ""
       }`}
       placeholder="search"

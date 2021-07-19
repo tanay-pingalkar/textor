@@ -145,7 +145,7 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
           <form className="ml-5 " onSubmit={commentIt}>
             <h1>Add comment</h1>
             <textarea
-              className={`${isMobile ? " w-full" : "w-80 h-24 resize"}`}
+              className={`${isMobile ? " w-full" : "w-80"} h-24 resize`}
               onChange={(e) => setBody(e.target.value)}
               value={body}
             ></textarea>{" "}
