@@ -45,9 +45,9 @@ export class posts {
       };
     }
 
-    if (body.length > 700) {
+    if (body.length > 3000) {
       return {
-        msg: "your body extends the limit of 700 words",
+        msg: "your body extends the limit of 3000 words",
       };
     }
 
