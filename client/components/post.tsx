@@ -103,12 +103,13 @@ const Post: React.FC<props> = ({
       )}
 
       <div className="flex justify-between w-full">
-        <Votes
+        {/* <Votes
           Upvoted={upvoted}
           Downvoted={downvoted}
           Votes={votes}
           postId={postId}
-        ></Votes>
+        ></Votes> */}
+        <div className="p-3"></div>
         <div className="flex flex-wrap justify-around">
           {me ? (
             <>

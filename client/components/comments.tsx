@@ -97,12 +97,13 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
         )}
 
         <span className="flex justify-between">
-          <Votes
+          {/* <Votes
             Upvoted={comment.upvoted}
             Votes={comment.totalVotes}
             Downvoted={comment.downvoted}
             commentId={comment.id}
-          />
+          /> */}
+          {/* <div className="p-3"></div> */}
           <span className="flex flex-wrap">
             {comment.me ? (
               <>
