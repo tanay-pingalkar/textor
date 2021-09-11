@@ -11,7 +11,7 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
     <>
       <Head>
         <title>
-          {user.name}({user.reputation})
+          {user.name}
         </title>
         <meta name="keywords" content={user.name} />
         <meta name="author" content={user.name} />
@@ -32,7 +32,6 @@ const Home: React.FC<ProfileResponse> = ({ msg, me, user }) => {
                 me={me}
                 name={user.name}
                 email={user.email}
-                reputation={user.reputation}
               ></User>
             ) : (
               <></>

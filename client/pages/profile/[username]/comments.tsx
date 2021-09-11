@@ -11,30 +11,23 @@ const Home: React.FC<ProfileWithCommentsQuery> = ({
   return (
     <>
       <Head>
-        <title>
-          {user.name}({user.reputation})
-        </title>
+        <title>{user.name}</title>
         <meta name="keywords" content={user.name} />
         <meta name="author" content={user.name} />
         <meta
           name="description"
-          content={`profile name : ${user.name}\nreputation : ${user.reputation}\ntotal comments : ${user.comments.length}`}
+          content={`profile name : ${user.name}\ntotal comments : ${user.comments.length}`}
         />
         <meta
           name="twitter:card"
-          content={`profile name : ${user.name}\nreputation : ${user.reputation}\ntotal comments : ${user.comments.length}`}
+          content={`profile name : ${user.name}\ntotal comments : ${user.comments.length}`}
         ></meta>
       </Head>
       <div>
         {msg === "great" ? (
           <>
             {user ? (
-              <User
-                me={me}
-                name={user.name}
-                email={user.email}
-                reputation={user.reputation}
-              ></User>
+              <User me={me} name={user.name} email={user.email}></User>
             ) : (
               <></>
             )}
