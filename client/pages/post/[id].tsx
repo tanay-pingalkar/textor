@@ -63,16 +63,16 @@ const Post: React.FC<props> = ({ post }) => {
         <meta name="author" content={post.user.name} />
         <meta
           name="description"
-          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
+          content={`title : ${post.title}\n comments : ${post.discussion}`}
         />
         <meta
           name="twitter:card"
-          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
+          content={`title : ${post.title}\n comments : ${post.discussion}`}
         />
         <meta property="og:title" content="Textor" />
         <meta
           property="og:description"
-          content={`title : ${post.title}\n upvotes : ${post.totalVotes}\n comments : ${post.discussion}`}
+          content={`title : ${post.title}\ncomments : ${post.discussion}`}
         />
       </Head>
       <div className="">
