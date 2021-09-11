@@ -133,16 +133,15 @@ const Post: React.FC<props> = ({ post }) => {
             </>
           )}
 
-         
-            {/* <Votes
+          {/* <Votes
               Upvoted={post.upvoted}
               Downvoted={post.downvoted}
               Votes={post.totalVotes}
               postId={post.id}
             ></Votes> */}
-             
-            {post.me ? (
-               <span className="flex justify-between">
+
+          {post.me ? (
+            <span className="flex justify-between">
               <div className="p-3"></div>
               <div className="flex flex-wrap">
                 <a
@@ -176,11 +175,10 @@ const Post: React.FC<props> = ({ post }) => {
                   delete
                 </a>
               </div>
-              </span>
-            ) : (
-              <div className="p-1"></div>
-            )}
-         
+            </span>
+          ) : (
+            <div className="p-1"></div>
+          )}
         </div>
         <div className="mt-3 ">
           <form className="px-5" onSubmit={comment}>

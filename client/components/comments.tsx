@@ -128,17 +128,21 @@ const Comment: React.FC<{ comment: Ctree; postId: string }> = ({
                 >
                   delete
                 </p>
+                <p
+                  className="hover:underline mb-1 ml-3  "
+                  onClick={() => setReply(!reply)}
+                >
+                  reply
+                </p>
               </>
             ) : (
-              <></>
+              <p
+                className="hover:underline mb-1  "
+                onClick={() => setReply(!reply)}
+              >
+                reply
+              </p>
             )}
-
-            <p
-              className="hover:underline mb-1 ml-3  "
-              onClick={() => setReply(!reply)}
-            >
-              reply
-            </p>
           </span>
         </span>
 
