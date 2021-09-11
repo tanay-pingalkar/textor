@@ -38,7 +38,7 @@ const NavToggle: React.FC = () => {
                 else "";
               })()} `}
             >
-              {name + `(${reputation})`}
+              {name}
             </a>
           </Link>
           <a
